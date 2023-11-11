@@ -1,13 +1,15 @@
 import './App.css'
-import AskQuestion from './pages/AskQuestion'
 import Navbar from './components/Navbar'
+import AskQuestion from './pages/AskQuestion'
+import HomePage from './pages/HomePage'
 
 
 function App() {
   return (
     <div className='main-content'>
       <Navbar />
-      <AskQuestion />
+      {/* <AskQuestion /> */}
+      <HomePage/>
     </div>
 
   )

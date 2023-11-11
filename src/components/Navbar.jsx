@@ -14,11 +14,12 @@ import SearchIcon from '@mui/icons-material/Search';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
+import DrawerLeft from './DrawerLeft';
 
 const Search = styled('div')(({ theme }) => ({
     position: 'relative',
     borderRadius: theme.shape.borderRadius,
-    border:"1px solid #818181",
+    border: "1px solid #818181",
     backgroundColor: alpha(theme.palette.common.white, 0.15),
     '&:hover': {
         backgroundColor: alpha(theme.palette.common.white, 0.25),
@@ -67,6 +68,8 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
         },
     },
 }));
+
+
 
 export default function Navbar() {
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -163,11 +166,28 @@ export default function Navbar() {
         </Menu>
     );
 
+
+    const [state, setState] = React.useState({
+        top: false,
+        left: false,
+        bottom: false,
+        right: false,
+    });
+
+    const toggleDrawer = (anchor, open) => (event) => {
+        if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
+            return;
+        }
+
+        setState({ ...state, [anchor]: open });
+    };
+
+
     return (
-        <Box sx={{ flexGrow: 1, width:"100vw", }}>
+        <Box sx={{ flexGrow: 1, width: "100vw", }}>
             <AppBar position="static"
                 sx={{
-                     bgcolor:"#fff"
+                    bgcolor: "#fff"
                 }}
             >
                 <Toolbar sx={{ width: "80vw", m: "auto", }}>
@@ -176,7 +196,8 @@ export default function Navbar() {
                         edge="start"
                         color="inherit"
                         aria-label="open drawer"
-                        sx={{ mr: 2 }}
+                        sx={{ mr: 2, display: { lg: 'none' } }}
+                        onClick={toggleDrawer('left', true)}
                     >
                         <MenuIcon color='action' />
                     </IconButton>
@@ -240,6 +261,10 @@ export default function Navbar() {
             </AppBar>
             {renderMobileMenu}
             {renderMenu}
+            <DrawerLeft
+                state={state}
+                toggleDrawer={toggleDrawer}
+            />
         </Box>
     );
 }
