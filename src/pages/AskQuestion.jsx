@@ -28,15 +28,13 @@ const instructionCard = (
             <Typography variant='h6'>
                 Steps
             </Typography >
-            <Typography sx={{ fontSize: 14 }} color="text.secondary">
-                <ul>
-                    <li>Summarize your problem in a one-line title.</li>
-                    <li>Describe your problem in more detail.</li>
-                    <li>Describe what you tried and what you expected to happen.</li>
-                    <li>Add “tags” which help surface your question to members of the community.</li>
-                    <li>Review your question and post it to the site.</li>
-                </ul>
-            </Typography>
+            <Box component="ul" sx={{ fontSize: 14 }} color="text.secondary">
+                <li>Summarize your problem in a one-line title.</li>
+                <li>Describe your problem in more detail.</li>
+                <li>Describe what you tried and what you expected to happen.</li>
+                <li>Add “tags” which help surface your question to members of the community.</li>
+                <li>Review your question and post it to the site.</li>
+            </Box>
         </CardContent>
     </>
 )

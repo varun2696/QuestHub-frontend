@@ -35,7 +35,6 @@ export default function HomePage() {
                             <Toolbar sx={{ width: "auto" }}>
                                 <Typography
                                     variant="h5"
-                                    noWrap
                                     sx={{ mr: 'auto' }}
                                 >
                                     Top Questions

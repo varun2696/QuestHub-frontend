@@ -21,7 +21,12 @@ export default function MenuListItem() {
     };
 
     return (
-        <Box sx={{ width: '100%', height:'100vh', maxWidth: 160, bgcolor: 'background.paper' }}>
+        <Box sx={{
+            width: '100%',
+            height: '100vh',
+            maxWidth: 160,
+            bgcolor: 'background.paper'
+        }}>
             <List component="nav" aria-label="main mailbox folders" >
                 <ListItemButton
                     selected={selectedIndex === 0}

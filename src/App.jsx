@@ -2,6 +2,7 @@ import './App.css'
 import Navbar from './components/Navbar'
 import AskQuestion from './pages/AskQuestion'
 import HomePage from './pages/HomePage'
+import SinglePageQnA from './pages/SinglePageQnA'
 
 
 function App() {
@@ -9,7 +10,8 @@ function App() {
     <div className='main-content'>
       <Navbar />
       {/* <AskQuestion /> */}
-      <HomePage/>
+      {/* <HomePage/> */}
+      <SinglePageQnA />
     </div>
 
   )
