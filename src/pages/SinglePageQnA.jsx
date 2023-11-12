@@ -1,5 +1,7 @@
 import { Box, Button, Card, CardActions, CardContent, Divider, Stack, Typography } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
+import { Link as LinkRoute } from 'react-router-dom'
+
 import RightCardHome from '../components/RightCardHome';
 import MenuListItem from '../components/MenuListItem';
 import TextArea from '../components/TextArea';
@@ -52,9 +54,11 @@ const SinglePageQnA = () => {
                             >
                                 use cvxpy to optimize on an existing portfolio by limiting the number of trades to make
                             </Typography>
-                            <Button variant="contained">
-                                Ask Question
-                            </Button>
+                            <LinkRoute to={'/ask-question'}>
+                                <Button variant="contained">
+                                    Ask Question
+                                </Button>
+                            </LinkRoute>
                         </Stack>
                         <Stack direction={'row'} spacing={5} p={2}>
                             <Typography>1</Typography>
@@ -66,13 +70,13 @@ const SinglePageQnA = () => {
                     <Divider />
                     <Grid container spacing={2} sx={{ mt: 2, border: "0px solid" }}>
                         <Grid xs={8.4}>
-                            <Typography 
-                            fontSize={'1.5rem'}
-                            sx={{pb:1, pt:2}}>
+                            <Typography
+                                fontSize={'1.5rem'}
+                                sx={{ pb: 1, pt: 2 }}>
                                 5 Answers
-                                </Typography>
+                            </Typography>
 
-                            <Card sx={{mt:2}}>
+                            <Card sx={{ mt: 2 }}>
                                 <CardContent>
                                     <Typography>
                                         Sample code below to try to use at most 2 trades to optimize the portfolio, but I don't know how to express the constraint on the number of trades made to get the optimized portfolio. What i tried below results in the error in the code comment below.

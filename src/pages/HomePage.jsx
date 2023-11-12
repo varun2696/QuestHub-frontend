@@ -3,10 +3,10 @@ import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Unstable_Grid2';
-
+import { Button, Toolbar, Typography } from '@mui/material';
+import { Link as LinkRoute } from 'react-router-dom'
 
 import MenuListItem from '../components/MenuListItem';
-import { Button, Toolbar, Typography } from '@mui/material';
 import QuestionCard from '../components/QuestionCard';
 import RightCardHome from '../components/RightCardHome';
 
@@ -39,9 +39,11 @@ export default function HomePage() {
                                 >
                                     Top Questions
                                 </Typography>
-                                <Button variant="contained">
-                                    Ask Question
-                                </Button>
+                                <LinkRoute to={'/ask-question'}>
+                                    <Button variant="contained">
+                                        Ask Question
+                                    </Button>
+                                </LinkRoute>
                             </Toolbar>
                             <Box
                                 sx={{
@@ -58,7 +60,7 @@ export default function HomePage() {
                 </Grid>
 
                 <Grid xs="auto">
-                    <RightCardHome/>
+                    <RightCardHome />
                 </Grid>
             </Grid>
         </Box>

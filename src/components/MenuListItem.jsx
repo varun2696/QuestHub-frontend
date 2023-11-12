@@ -10,15 +10,25 @@ import LocalOfferIcon from '@mui/icons-material/LocalOffer';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import WorkIcon from '@mui/icons-material/Work';
+import { useNavigate } from 'react-router-dom';
 
 
 
 export default function MenuListItem() {
-    const [selectedIndex, setSelectedIndex] = React.useState(1);
+    const [selectedIndex, setSelectedIndex] = React.useState(0);
+    const navigate = useNavigate();
+
 
     const handleListItemClick = (event, index) => {
         setSelectedIndex(index);
     };
+
+
+    const handleHomeRoute = (event, index) => {
+        setSelectedIndex(index);
+        navigate('/')
+    }
+    
 
     return (
         <Box sx={{
@@ -30,7 +40,7 @@ export default function MenuListItem() {
             <List component="nav" aria-label="main mailbox folders" >
                 <ListItemButton
                     selected={selectedIndex === 0}
-                    onClick={(event) => handleListItemClick(event, 0)}
+                    onClick={(event) => handleHomeRoute(event, 0)}
                 >
                     <ListItemIcon >
                         <HomeIcon sx={{ pl: 2 }} />
@@ -40,7 +50,7 @@ export default function MenuListItem() {
 
                 <ListItemButton
                     selected={selectedIndex === 1}
-                    onClick={(event) => handleListItemClick(event, 1)}
+                    onClick={(event) => handleHomeRoute(event, 1)}
                 >
                     <ListItemIcon>
                         <QuestionAnswerIcon sx={{ pl: 2 }} />
