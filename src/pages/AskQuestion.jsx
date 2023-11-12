@@ -161,7 +161,6 @@ const AskQuestion = () => {
         <>
             <CssBaseline />
             <Container maxWidth="lg" sx={{ border: "0px solid" }}>
-
                 <Toolbar>
                     <Typography
                         variant="h5"

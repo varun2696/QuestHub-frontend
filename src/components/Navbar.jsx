@@ -14,7 +14,13 @@ import SearchIcon from '@mui/icons-material/Search';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
+
 import DrawerLeft from './DrawerLeft';
+import { Link as LinkRoute } from 'react-router-dom'
+// import { Button } from '@mui/material';
+import Button from '@mui/joy/Button';
+import { Avatar } from '@mui/material';
+
 
 const Search = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -72,6 +78,9 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 
 export default function Navbar() {
+
+    const [isLogin, setIsLogin] = React.useState(false)
+
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
 
@@ -96,6 +105,7 @@ export default function Navbar() {
     };
 
     const menuId = 'primary-search-account-menu';
+
     const renderMenu = (
         <Menu
             anchorEl={anchorEl}
@@ -113,11 +123,12 @@ export default function Navbar() {
             onClose={handleMenuClose}
         >
             <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-            <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+            <MenuItem onClick={handleMenuClose}>Logout</MenuItem>
         </Menu>
     );
 
     const mobileMenuId = 'primary-search-account-menu-mobile';
+
     const renderMobileMenu = (
         <Menu
             anchorEl={mobileMoreAnchorEl}
@@ -134,34 +145,23 @@ export default function Navbar() {
             open={isMobileMenuOpen}
             onClose={handleMobileMenuClose}
         >
-            <MenuItem>
-                <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-                </IconButton>
-                <p>Messages</p>
-            </MenuItem>
-            <MenuItem>
+            <MenuItem >
                 <IconButton
                     size="large"
                     aria-label="show 17 new notifications"
                     color="inherit"
                 >
-                    <Badge badgeContent={17} color="error">
-                        <NotificationsIcon />
-                    </Badge>
+                    <Avatar sx={{
+                        bgcolor: "#637bfe",
+                        width: 32,
+                        height: 32
+                    }}>
+                        V
+                    </Avatar>
                 </IconButton>
-                <p>Notifications</p>
             </MenuItem>
-            <MenuItem onClick={handleProfileMenuOpen}>
-                <IconButton
-                    size="large"
-                    aria-label="account of current user"
-                    aria-controls="primary-search-account-menu"
-                    aria-haspopup="true"
-                    color="inherit"
-                >
-                    <AccountCircle color='action' />
-                </IconButton>
-                <p>Profile</p>
+            <MenuItem>
+                <Button variant="plain">Logout</Button>
             </MenuItem>
         </Menu>
     );
@@ -184,13 +184,13 @@ export default function Navbar() {
 
 
     return (
-        <Box sx={{ flexGrow: 1, width: "100vw", }}>
+        <Box sx={{ flexGrow: 1, width: "100vw" }}>
             <AppBar position="static"
                 sx={{
                     bgcolor: "#fff"
                 }}
             >
-                <Toolbar sx={{ width: "80vw", m: "auto", }}>
+                <Toolbar sx={{ width: "80vw", m: "auto", border: '2px solid red' }}>
                     <IconButton
                         size="large"
                         edge="start"
@@ -201,15 +201,17 @@ export default function Navbar() {
                     >
                         <MenuIcon color='action' />
                     </IconButton>
-                    <Typography
-                        variant="h6"
-                        noWrap
-                        component="div"
-                        color={"#3c3c3c"}
-                        sx={{ display: { xs: 'none', sm: 'block' } }}
-                    >
-                        QuestHub
-                    </Typography>
+                    <LinkRoute className='txt-dec-none' to='/'>
+                        <Typography
+                            variant="h6"
+                            noWrap
+                            component="div"
+                            color={"#3c3c3c"}
+                            sx={{ display: { xs: 'none', sm: 'block' } }}
+                        >
+                            QuestHub
+                        </Typography>
+                    </LinkRoute>
                     <Search>
                         <SearchIconWrapper>
                             <SearchIcon color='action' />
@@ -221,32 +223,31 @@ export default function Navbar() {
                         />
                     </Search>
                     <Box sx={{ flexGrow: 1 }} />
+
                     <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-                        <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-                        </IconButton>
-                        <IconButton
-                            size="large"
-                            aria-label="show 17 new notifications"
-                            color="inherit"
-                        >
-                            <Badge badgeContent={17} color="error">
-                                <NotificationsIcon color='action' />
-                            </Badge>
-                        </IconButton>
-                        <IconButton
-                            size="large"
-                            edge="end"
-                            aria-label="account of current user"
-                            aria-controls={menuId}
-                            aria-haspopup="true"
-                            onClick={handleProfileMenuOpen}
-                            color="inherit"
-                        >
-                            <AccountCircle color='action' />
-                        </IconButton>
+                        {isLogin ? (
+                            <IconButton
+                                size="large"
+                                aria-label="show 17 new notifications"
+                                color="inherit"
+                                onClick={handleProfileMenuOpen}
+                            >
+                                <Avatar sx={{
+                                    bgcolor: "#637bfe",
+                                    width: 32,
+                                    height: 32
+                                }}>
+                                    V
+                                </Avatar>
+                            </IconButton>
+                        ) : (
+                            <LinkRoute to={'/signup'}>
+                                <Button size='md' variant="outlined">Sign Up</Button>
+                            </LinkRoute>
+                        )}
                     </Box>
                     <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
-                        <IconButton
+                        {/* <IconButton
                             size="large"
                             aria-label="show more"
                             aria-controls={mobileMenuId}
@@ -255,7 +256,27 @@ export default function Navbar() {
                             color="inherit"
                         >
                             <MoreIcon color='action' />
-                        </IconButton>
+                        </IconButton> */}
+                        {isLogin ? (
+                            <IconButton
+                                size="large"
+                                aria-label="show 17 new notifications"
+                                color="inherit"
+                                onClick={handleProfileMenuOpen}
+                            >
+                                <Avatar sx={{
+                                    bgcolor: "#637bfe",
+                                    width: 32,
+                                    height: 32
+                                }}>
+                                    V
+                                </Avatar>
+                            </IconButton>
+                        ) : (
+                            <LinkRoute to={'/signup'}>
+                                <Button size='sm' variant="outlined">Sign Up</Button>
+                            </LinkRoute>
+                        )}
                     </Box>
                 </Toolbar>
             </AppBar>
@@ -295,3 +316,17 @@ export default function Navbar() {
 //         </AppBar>
 //     </Box>
 // }
+
+
+
+// <IconButton
+// size="large"
+// edge="end"
+// aria-label="account of current user"
+// aria-controls={menuId}
+// aria-haspopup="true"
+// onClick={handleProfileMenuOpen}
+// color="inherit"
+// >
+// <AccountCircle color='action' />
+// </IconButton>

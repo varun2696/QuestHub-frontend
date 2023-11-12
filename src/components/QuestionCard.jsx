@@ -1,5 +1,4 @@
-import { Box, Card, Stack, Typography, Avatar } from '@mui/material'
-import Grid from '@mui/material/Unstable_Grid2';
+import { Card, Stack, Typography, Avatar } from '@mui/material'
 import Chip from '@mui/material/Chip';
 
 import { Link as LinkRoute } from 'react-router-dom'
@@ -7,7 +6,7 @@ import { Link as LinkRoute } from 'react-router-dom'
 const QuestionCard = () => {
     return (
         <>
-            <LinkRoute to='/question/1' className='question-card'>
+            <LinkRoute to='/question/1' className='txt-dec-none'>
                 <Card sx={{ p: 2, bgcolor: "#fdf7e7" }}>
                     <Stack direction={'row'} spacing={2}>
                         <Stack
@@ -55,7 +54,6 @@ const QuestionCard = () => {
                                         RaviKiran
                                     </Typography>
                                 </Stack>
-
                             </Stack>
                         </Stack>
                     </Stack>

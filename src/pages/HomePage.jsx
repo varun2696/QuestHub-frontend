@@ -22,14 +22,14 @@ const Item = styled(Paper)(({ theme }) => ({
 
 export default function HomePage() {
     return (
-        <Box sx={{ flexGrow: 1, width: "82vw", m: 'auto', mt: 2 }}>
+        <Box sx={{ flexGrow: 1, width: "80vw", m: 'auto', mt: 0 }}>
             <Grid container spacing={1}>
-                <Grid xs="auto">
+                <Grid xs={'auto'}>
                     <Item>
                         <MenuListItem />
                     </Item>
                 </Grid>
-                <Grid xs={7}>
+                <Grid xs={7.6}>
                     <Item>
                         <Box sx={{ height: '100vh' }}>
                             <Toolbar sx={{ width: "auto" }}>
@@ -59,7 +59,7 @@ export default function HomePage() {
                     </Item>
                 </Grid>
 
-                <Grid xs="auto">
+                <Grid xs={2.7}>
                     <RightCardHome />
                 </Grid>
             </Grid>
