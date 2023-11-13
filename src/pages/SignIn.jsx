@@ -13,7 +13,9 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
-import { Link as LinkRoute } from 'react-router-dom'
+import { Link as LinkRoute, Navigate, useNavigate } from 'react-router-dom'
+import { base_url } from '../api';
+import axios from 'axios';
 
 const defaultTheme = createTheme();
 
@@ -22,18 +24,35 @@ export default function SignIn() {
     const [email, setEmail] = React.useState("");
     const [password, setPassword] = React.useState("");
 
-    const handleSubmit = (event) => {
+    const navigate = useNavigate();
+    const handleSubmit = async (event) => {
         event.preventDefault();
 
         if (email === "" || password === "") {
             alert("Please Enter All fields")
         }
         else {
-            let userData = {
+            const userData = {
                 email,
                 password
             }
-            console.log({ userData })
+            // console.log({ userData })
+
+            await axios.post(`${base_url}/users/login`, userData)
+                .then(res => {
+                    // console.log({ res });
+                    if(res.data.token){
+                        sessionStorage.setItem('authToken', res.data.token)
+                        alert(res.data.msg)
+                        navigate('/')
+                    }
+                    else{
+                        alert(res.data.msg)
+                    }
+                })
+                .catch(err => {
+                    console.log({ err });
+                })
         }
     };
 

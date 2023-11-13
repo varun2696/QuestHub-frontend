@@ -9,8 +9,13 @@ import { Link as LinkRoute } from 'react-router-dom'
 import MenuListItem from '../components/MenuListItem';
 import QuestionCard from '../components/QuestionCard';
 import RightCardHome from '../components/RightCardHome';
+import axios from 'axios';
+import { base_url } from '../api';
 
 
+const getQuestions = async ()=>{
+    return await axios.get(`${base_url}/questions`)
+}
 
 const Item = styled(Paper)(({ theme }) => ({
     // backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -20,7 +25,21 @@ const Item = styled(Paper)(({ theme }) => ({
     // color: theme.palette.text.secondary,
 }));
 
+
 export default function HomePage() {
+const [data, setData] = React.useState([]);
+
+    React.useEffect(()=>{
+
+    getQuestions().then(res =>{
+        // console.log(res.data)
+        setData(res.data);
+    })
+    .catch(err =>{
+        console.log(err);
+    })
+
+    },[])
     return (
         <Box sx={{ flexGrow: 1, width: "80vw", m: 'auto', mt: 0 }}>
             <Grid container spacing={1}>
@@ -52,8 +71,19 @@ export default function HomePage() {
                                     mt: 8
                                 }}
                             >
-                                <QuestionCard />
-                                <QuestionCard />
+                               {data && data?.map((el) => {
+                                 return (
+                                    <QuestionCard 
+                                    key={el._id}
+                                    username={el.username}
+                                    questionTitle={el.questionTitle}
+                                    votes={el.upvotes}
+                                    answers={el.answers.length}
+                                    language={el.language}
+                                    id={el._id}
+                                    />
+                                 )
+                               })}
                             </Box>
                         </Box>
                     </Item>

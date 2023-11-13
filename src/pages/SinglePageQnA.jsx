@@ -1,30 +1,104 @@
 import { Box, Button, Card, CardActions, CardContent, Divider, Stack, Typography } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
-import { Link as LinkRoute } from 'react-router-dom'
+import { Link as LinkRoute, useParams } from 'react-router-dom'
 
 import RightCardHome from '../components/RightCardHome';
 import MenuListItem from '../components/MenuListItem';
-import TextArea from '../components/TextArea';
+import axios from 'axios';
+import { base_url } from '../api';
+import { useEffect, useState } from 'react';
+import TextareaAutosize from '@mui/material/TextareaAutosize';
 
 
-const questionDetailsCard = (
-    <>
-        <CardContent >
-            <Typography variant='h5' sx={{ fontWeight: 500, pb: 2 }} gutterBottom>
-                Your Answer
-            </Typography>
-            <Box>
-                <TextArea />
-            </Box>
-        </CardContent>
-        <CardActions sx={{ ml: 1 }}>
-            <Button size="small" variant="contained">Post</Button>
-        </CardActions>
-    </>
-)
+const getQuestionbyId = async (id) => {
+
+    try {
+        // Retrieve the token
+        const authToken = sessionStorage.getItem('authToken');
+
+        // Set the authorization header with the token
+        if (authToken) {
+            const headers = {
+                Authorization: `Bearer ${authToken}`,
+            };
+
+            // Make the GET request with the headers
+            const response = await axios.get(`${base_url}/question/${id}`, { headers });
+            // console.log("response", response);
+            return response;
+        }
+        else {
+            alert("Please Login")
+        }
+    }
+    catch (error) {
+        console.error('Error fetching data', error);
+    }
+};
+
+const postYourAnswer = async (id, data) => {
+    try {
+        const authToken = sessionStorage.getItem('authToken');
+
+        if (authToken) {
+            const headers = {
+                Authorization: `Bearer ${authToken}`,
+            };
+
+            const response = await axios.post(`${base_url}/question/${id}/answers`, data, { headers });
+            // console.log("response", response);
+            return response;
+        }
+        else {
+            alert("Please Login")
+        }
+    }
+    catch (error) {
+        console.error('Error fetching data', error);
+    }
+}
+
 
 
 const SinglePageQnA = () => {
+
+    const [data, setData] = useState([]);
+    const { id } = useParams();
+    const [textareaValue, setTextareaValue] = useState('');
+
+
+    const handlePostAnswer = () => {
+        // console.log("text", textareaValue)
+
+        const postAnswer = {
+            answerText: textareaValue
+        }
+        postYourAnswer(id, postAnswer)
+            .then(res => {
+                console.log(res.data.msg)
+                setTextareaValue("");
+            })
+            .catch(err => {
+                console.log({ err });
+            })
+    }
+
+    const handleTextareaChange = (event) => {
+        setTextareaValue(event.target.value);
+    };
+
+    useEffect(() => {
+        getQuestionbyId(id)
+            .then(res => {
+                // console.log("res", res.data);
+                setData(res.data)
+            })
+            .catch(err => {
+                console.log({ err });
+            })
+    }, [])
+
+
     return (
         <Box sx={{
             width: "80vw",
@@ -52,7 +126,8 @@ const SinglePageQnA = () => {
                                 variant="h6"
                                 sx={{ mr: 'auto' }}
                             >
-                                use cvxpy to optimize on an existing portfolio by limiting the number of trades to make
+                                {/* questionTitle */}
+                                {data && data?.questionTitle}
                             </Typography>
                             <LinkRoute to={'/ask-question'}>
                                 <Button variant="contained">
@@ -70,23 +145,68 @@ const SinglePageQnA = () => {
                     <Divider />
                     <Grid container spacing={2} sx={{ mt: 2, border: "0px solid" }}>
                         <Grid xs={8.4}>
-                            <Typography
-                                fontSize={'1.5rem'}
-                                sx={{ pb: 1, pt: 2 }}>
-                                5 Answers
-                            </Typography>
 
-                            <Card sx={{ mt: 2 }}>
+                            <Card sx={{ mt: 2 }} >
                                 <CardContent>
+                                    <Typography variant='h6'>
+                                        Description of the question:
+                                    </Typography>
+                                    <br />
                                     <Typography>
-                                        Sample code below to try to use at most 2 trades to optimize the portfolio, but I don't know how to express the constraint on the number of trades made to get the optimized portfolio. What i tried below results in the error in the code comment below.
+                                        {data && data?.questionDescription}
                                     </Typography>
                                 </CardContent>
                             </Card>
+                            <Typography
+                                fontSize={'1.5rem'}
+                                sx={{ pb: 1, pt: 2 }}>
+                                {/* 2 Answers */}
+                                {data && data?.answers?.length} Answers
+                            </Typography>
+
+                            {data && data?.answers?.map((el) => {
+                                return (
+                                    <Card sx={{ mt: 2 }} key={el._id}>
+                                        <CardContent>
+                                            <Typography>
+                                                {el.answerText}
+                                            </Typography>
+                                        </CardContent>
+                                    </Card>
+                                )
+                            })}
 
                             <Box sx={{ mt: 8, mb: 2, }}>
                                 <Card variant="outlined" >
-                                    {questionDetailsCard}
+                                    <CardContent >
+                                        <Typography variant='h5' sx={{ fontWeight: 500, pb: 2 }} gutterBottom>
+                                            Your Answer
+                                        </Typography>
+                                        <Box>
+                                            <TextareaAutosize
+                                                value={textareaValue}
+                                                onChange={handleTextareaChange}
+                                                aria-label="textarea"
+                                                placeholder="Enter your text here"
+                                                rows={10} // Adjust as needed
+                                                style={{
+                                                    minWidth: '100%',
+                                                    maxWidth: "100%",
+                                                    minHeight: '200px',
+                                                }}
+                                            />
+                                        </Box>
+                                    </CardContent>
+                                    <CardActions sx={{ ml: 1 }}>
+                                        <Button
+                                            size="small"
+                                            variant="contained"
+                                            onClick={handlePostAnswer}
+                                            disabled={!textareaValue}
+                                        >
+                                            Post
+                                        </Button>
+                                    </CardActions>
                                 </Card>
                             </Box>
                         </Grid>
@@ -103,31 +223,31 @@ const SinglePageQnA = () => {
 export default SinglePageQnA
 
 
-const tempGrid = (
-    <>
-        <Grid container>
-            <Grid item xs={2}>
-                <Box sx={{ height: "62vh", border: "1px solid red" }}>
-                    1
-                </Box>
-            </Grid>
-            <Grid container xs={10}>
-                <Grid xs={12}>
-                    <Box sx={{ height: "10vh", border: "1px solid" }}>
-                        2
-                    </Box>
-                </Grid>
-                <Grid xs={8}>
-                    <Box sx={{ height: "50vh", border: "1px solid" }}>
-                        3
-                    </Box>
-                </Grid>
-                <Grid xs={4}>
-                    <Box sx={{ height: "50vh", border: "1px solid" }}>
-                        4
-                    </Box>
-                </Grid>
-            </Grid>
-        </Grid>
-    </>
-)
+// const tempGrid = (
+//     <>
+//         <Grid container>
+//             <Grid item xs={2}>
+//                 <Box sx={{ height: "62vh", border: "1px solid red" }}>
+//                     1
+//                 </Box>
+//             </Grid>
+//             <Grid container xs={10}>
+//                 <Grid xs={12}>
+//                     <Box sx={{ height: "10vh", border: "1px solid" }}>
+//                         2
+//                     </Box>
+//                 </Grid>
+//                 <Grid xs={8}>
+//                     <Box sx={{ height: "50vh", border: "1px solid" }}>
+//                         3
+//                     </Box>
+//                 </Grid>
+//                 <Grid xs={4}>
+//                     <Box sx={{ height: "50vh", border: "1px solid" }}>
+//                         4
+//                     </Box>
+//                 </Grid>
+//             </Grid>
+//         </Grid>
+//     </>
+// )

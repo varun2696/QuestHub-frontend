@@ -13,6 +13,8 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 import { Link as LinkRoute } from 'react-router-dom'
+import axios from 'axios';
+import { base_url } from '../api';
 
 // TODO remove, this demo shouldn't need to reset the theme.
 
@@ -26,25 +28,30 @@ export default function SignUp() {
   const [password, setPassword] = React.useState("");
 
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    // const data = new FormData(event.currentTarget);
-    // console.log({
-    //   email: data.get('email'),
-    //   password: data.get('password'),
-    // });
 
     if (firstName === "" || lastName === "" || email === "" || password === "") {
       alert("Please Enter All fields")
     }
     else {
-      let userData = {
-        username: `${firstName} ${lastName}`,
+      const userData = {
+        name: `${firstName} ${lastName}`,
         email,
         password,
       }
+      // console.log({ userData })
 
-      console.log({ userData })
+      try {
+        let res = await axios.post(`${base_url}/users/signup`, userData)
+        console.log({ res });
+        alert(res.data.msg)
+
+      } catch (error) {
+        console.log({ error });
+      }
+
+
     }
   };
 
@@ -142,3 +149,20 @@ export default function SignUp() {
     </ThemeProvider>
   );
 }
+
+
+
+// try {
+//   const response = await fetch("http://localhost:5000/users/signup", {
+//     method: "POST", // or 'PUT'
+//     headers: {
+//       "Content-Type": "application/json",
+//     },
+//     body: JSON.stringify(userData),
+//   });
+
+//   const result = await response.json();
+//   console.log("Success:", result);
+// } catch (error) {
+//   console.error("Error:", error);
+// }
