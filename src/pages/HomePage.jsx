@@ -81,6 +81,7 @@ const [data, setData] = React.useState([]);
                                     answers={el.answers.length}
                                     language={el.language}
                                     id={el._id}
+                                    userFirstLetter={el.username[0]}
                                     />
                                  )
                                })}

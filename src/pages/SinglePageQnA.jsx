@@ -77,6 +77,7 @@ const SinglePageQnA = () => {
             .then(res => {
                 console.log(res.data.msg)
                 setTextareaValue("");
+                alert(res.data.msg)
             })
             .catch(err => {
                 console.log({ err });

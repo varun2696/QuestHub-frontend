@@ -3,7 +3,7 @@ import Chip from '@mui/material/Chip';
 
 import { Link as LinkRoute } from 'react-router-dom'
 
-const QuestionCard = ({username, votes, answers, language, questionTitle, id}) => {
+const QuestionCard = ({username, votes, answers, language, questionTitle, id, userFirstLetter}) => {
     return (
         <>
             <LinkRoute to={`/question/${id}`} className='txt-dec-none'>
@@ -40,9 +40,9 @@ const QuestionCard = ({username, votes, answers, language, questionTitle, id}) =
 
                                 <Stack direction={'row'} alignItems={"center"} spacing={1}>
                                     <Avatar
-                                        sx={{ width: 26, height: 26 }}
+                                        sx={{ width: 28, height: 28 }}
                                     >
-                                        R
+                                        {userFirstLetter}
                                     </Avatar>
                                     <Typography>
                                         {username}

@@ -8,11 +8,15 @@ import {
     CssBaseline,
     Divider,
     TextField,
+    TextareaAutosize,
     Toolbar,
     Typography
 }
     from '@mui/material'
-import TextArea from '../components/TextArea'
+
+import { base_url } from '../api'
+import axios from 'axios'
+import { forwardRef, useRef, useState } from 'react'
 
 
 const instructionCard = (
@@ -40,7 +44,7 @@ const instructionCard = (
 )
 
 
-const questionTitleCard = (
+const QuestionTitleCard = ({ onChange, onClick, disabled, value }) => (
     <>
         <CardContent>
             <Typography sx={{ fontWeight: 600 }} gutterBottom>
@@ -49,31 +53,64 @@ const questionTitleCard = (
             <Typography sx={{ fontSize: 12, mb: 1 }} component="div">
                 Be specific and imagine you’re asking a question to another person.
             </Typography>
-            <TextField fullWidth id="fullWidth" size="small" />
+            <TextField
+                fullWidth
+                id="fullWidth"
+                size="small"
+                onChange={onChange}
+                value={value}
+            />
         </CardContent>
         <CardActions sx={{ ml: 1 }}>
-            <Button size="small" variant="contained">Next</Button>
+            <Button
+                size="small"
+                variant="contained"
+                onClick={onClick}
+                disabled={disabled}
+            >
+                Next
+            </Button>
         </CardActions>
     </>
 )
 
 
-const questionTopicCard = (
-    <>
-        <CardContent>
-            <Typography sx={{ fontWeight: 600 }} gutterBottom>
-                Topic
-            </Typography>
-            <Typography sx={{ fontSize: 12, mb: 1 }} component="div">
-                Plase enter the topic or programming language of the question.
-            </Typography>
-            <TextField fullWidth id="fullWidth" size="small" placeholder='ex: React.js' />
-        </CardContent>
-        <CardActions sx={{ ml: 1 }}>
-            <Button size="small" variant="contained">Next</Button>
-        </CardActions>
-    </>
-)
+const QuestionTopicCard = forwardRef((props, ref) => {
+    const { onChange, onClick, disabled, value } = props;
+
+    return (
+        <>
+            <CardContent>
+                <Typography sx={{ fontWeight: 600 }} gutterBottom>
+                    Topic
+                </Typography>
+                <Typography sx={{ fontSize: 12, mb: 1 }} component="div">
+                    Plase enter the topic or programming language of the question.
+                </Typography>
+                <TextField
+                    fullWidth
+                    id="fullWidth"
+                    size="small"
+                    placeholder='ex: React.js'
+                    onChange={onChange}
+                    value={value}
+                    inputRef={ref}
+                />
+            </CardContent>
+            <CardActions sx={{ ml: 1 }}>
+                <Button
+                    size="small"
+                    variant="contained"
+                    disabled={disabled}
+                    onClick={onClick}
+                >
+                    Next
+                </Button>
+            </CardActions>
+        </>
+    )
+})
+
 
 
 const titleSuggestionCard = (
@@ -107,25 +144,6 @@ const titleSuggestionCard = (
 )
 
 
-const questionDetailsCard = (
-    <>
-        <CardContent>
-            <Typography sx={{ fontWeight: 600 }} gutterBottom>
-                What are the details of your problem?
-            </Typography>
-            <Typography sx={{ fontSize: 12, mb: 1 }} component="div">
-                Introduce the problem and expand on what you put in the title. Minimum 20 characters.
-            </Typography>
-            <Box>
-                <TextArea />
-            </Box>
-        </CardContent>
-        <CardActions sx={{ ml: 1 }}>
-            <Button size="small" variant="contained">Post</Button>
-        </CardActions>
-    </>
-)
-
 
 const problemSuggestionCard = (
     <>
@@ -155,7 +173,73 @@ const problemSuggestionCard = (
 )
 
 
+const postNewQuestion = async (data) => {
+    try {
+        const authToken = sessionStorage.getItem('authToken');
+
+        if (authToken) {
+            const headers = {
+                Authorization: `Bearer ${authToken}`,
+            };
+
+            const response = await axios.post(`${base_url}/question/create`, data, { headers });
+            // console.log("response", response);
+            return response;
+        }
+        else {
+            alert("Please Login")
+        }
+    }
+    catch (error) {
+        console.error('Error fetching data', error);
+    }
+}
+
+
 const AskQuestion = () => {
+    const [questionTitle, setQuestionTitle] = useState("");
+    const [questionDescription, setQuestionDescription] = useState('');
+    const [language, setLanguage] = useState("");
+
+    const input2Ref = useRef(null);
+    const input3Ref = useRef(null);
+
+    const handleNext1Click = () => {
+        input2Ref.current.focus();
+        // console.log("next-btn 1 clicked")
+    };
+
+    const handleNext2Click = () => {
+        input3Ref.current.focus();
+        // console.log("next-btn 2 clicked")
+    };
+
+    const handlePostNewQuestion = () => {
+        // console.log("text", textareaValue)
+
+        const postAnswer = {
+            questionTitle,
+            questionDescription,
+            language,
+        }
+
+        if (!questionDescription || !questionTitle || !language) {
+            alert("Please Enter all fields")
+        }
+        else {
+            postNewQuestion(postAnswer)
+                .then(res => {
+                    console.log(res.data.msg)
+                    setQuestionTitle("");
+                    setQuestionDescription("");
+                    setLanguage("");
+                    alert(res.data.msg)
+                })
+                .catch(err => {
+                    console.log({ err });
+                })
+        }
+    }
 
     return (
         <>
@@ -189,7 +273,12 @@ const AskQuestion = () => {
                 }}>
                     <Box sx={{ width: "800px", mt: 3 }}>
                         <Card variant="outlined" sx={{ height: "11rem" }} >
-                            {questionTitleCard}
+                            {<QuestionTitleCard
+                                value={questionTitle}
+                                onChange={(e) => setQuestionTitle(e.target.value)}
+                                disabled={!questionTitle}
+                                onClick={handleNext1Click}
+                            />}
                         </Card>
                     </Box>
 
@@ -202,7 +291,13 @@ const AskQuestion = () => {
 
                 <Box sx={{ width: "800px", mt: 3 }}>
                     <Card variant="outlined" sx={{ height: "11rem" }} >
-                        {questionTopicCard}
+                        {<QuestionTopicCard
+                            value={language}
+                            onChange={(e) => setLanguage(e.target.value)}
+                            disabled={!language}
+                            ref={input2Ref}
+                            onClick={handleNext2Click}
+                        />}
                     </Card>
                 </Box>
 
@@ -214,7 +309,40 @@ const AskQuestion = () => {
                 }} >
                     <Box sx={{ width: "800px", mt: 3, mb: 2, }}>
                         <Card variant="outlined" >
-                            {questionDetailsCard}
+                            <CardContent>
+                                <Typography sx={{ fontWeight: 600 }} gutterBottom>
+                                    What are the details of your problem?
+                                </Typography>
+                                <Typography sx={{ fontSize: 12, mb: 1 }} component="div">
+                                    Introduce the problem and expand on what you put in the title. Minimum 20 characters.
+                                </Typography>
+                                <Box>
+                                    <TextareaAutosize
+                                        value={questionDescription}
+                                        onChange={(e) => setQuestionDescription(e.target.value)}
+                                        ref={input3Ref}
+                                        aria-label="textarea"
+                                        placeholder="Enter your text here"
+                                        rows={10}
+                                        style={{
+                                            minWidth: '100%',
+                                            maxWidth: "100%",
+                                            minHeight: '200px',
+                                        }}
+                                    />
+                                </Box>
+                            </CardContent>
+                            <CardActions sx={{ ml: 1 }}>
+                                <Button
+                                    size="small"
+                                    variant="contained"
+                                    onClick={handlePostNewQuestion}
+                                    disabled={!questionDescription}
+                                >
+                                    Post
+                                </Button>
+                            </CardActions>
+
                         </Card>
                     </Box>
                     <Box sx={{ width: "340px", mt: 3 }}>
