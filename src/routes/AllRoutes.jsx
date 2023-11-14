@@ -5,13 +5,20 @@ import SinglePageQnA from '../pages/SinglePageQnA'
 import SignUp from '../pages/SignUp'
 import SignIn from '../pages/SignIn'
 import PrivateRoute from './PrivateRoute'
+import AllQuestions from '../pages/AllQuestions'
 
 
 const AllRoutes = () => {
 
     return (
         <Routes>
-            <Route path='/' element={<HomePage />} />
+            <Route path='/' element={
+                <HomePage />
+            } />
+
+            <Route path='/all-questions' element={
+                <AllQuestions />
+            } />
 
             <Route path='/ask-question' element={
                 <PrivateRoute>

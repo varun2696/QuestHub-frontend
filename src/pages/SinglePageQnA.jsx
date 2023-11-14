@@ -123,21 +123,27 @@ const SinglePageQnA = () => {
                     // border: "1px solid red",
                     // height: "80vh"
                 }}>
-                    <Box>
-                        <Stack direction={'row'} justifyContent={"space-between"} p={2}>
+                    <Box width={'100%'}>
+                        <Stack
+                            direction={'row'}
+                            justifyContent={"space-between"}
+                            alignItems={'center'}
+                            p={2}
+                        >
                             <Typography
                                 variant="h5"
                                 fontWeight={400}
                                 sx={{
                                     mr: 'auto',
-                                    fontSize: { lg: '2.5rem', md: "2rem", sm: "1.5rem", xs: "1rem" }
+                                    pt:1,
+                                    fontSize: { lg: '2rem', md: "2rem", sm: "1.5rem", xs: "1rem" },
+                                    width:"80%"
                                 }}
                             >
-                                {/* questionTitle */}
                                 {data && data?.questionTitle}
                             </Typography>
-                            <LinkRoute to={'/ask-question'}>
-                                <Button variant="solid">
+                            <LinkRoute to={'/ask-question'} sx={{ border: '2px solid' }}>
+                                <Button variant="solid"  >
                                     Ask Question
                                 </Button>
                             </LinkRoute>
@@ -152,7 +158,7 @@ const SinglePageQnA = () => {
                     <Divider />
 
                     <Grid container spacing={1} sx={{ mt: 2, }}>
-                        <Grid lg={8.4} md={8} sm={12}  xs={12}>
+                        <Grid lg={8.4} md={8} sm={12} xs={12}>
 
                             <Card sx={{ mt: 2 }} >
                                 <CardContent>

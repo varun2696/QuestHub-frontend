@@ -29,6 +29,10 @@ export default function MenuListItem() {
         navigate('/')
     }
     
+    const handleAllQuestionsRoute = (event, index)=>{
+        setSelectedIndex(index);
+        navigate('/all-questions')
+    }
 
     return (
         <Box sx={{
@@ -51,7 +55,7 @@ export default function MenuListItem() {
 
                 <ListItemButton
                     selected={selectedIndex === 1}
-                    onClick={(event) => handleHomeRoute(event, 1)}
+                    onClick={(event) => handleAllQuestionsRoute(event, 1)}
                 >
                     <ListItemIcon>
                         <QuestionAnswerIcon sx={{ pl: 2 }} />
