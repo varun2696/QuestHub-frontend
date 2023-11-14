@@ -243,115 +243,154 @@ const AskQuestion = () => {
 
     return (
         <>
-            <CssBaseline />
-            <Container maxWidth="lg" sx={{ border: "0px solid" }}>
-                <Toolbar>
-                    <Typography
-                        variant="h5"
-                        noWrap
-                        sx={{ fontWeight: 700 }}
-                    >
-                        Ask a public question
-                    </Typography>
+            <Box sx={{
+                width: { lg: "80vw", md: "95vw", sm: '98vw', xs: "100vw", },
+                minWidth: { lg: "80vw", md: "95vw", sm: '98vw', xs: "100vw", },
+                border: '1px solid',
+                m: 'auto'
+            }}
+            >
+                <CssBaseline />
+                <Container>
+                    <Toolbar>
+                        <Typography
+                            variant="h5"
+                            noWrap
+                            sx={{ fontWeight: 700 }}
+                            marginRight={'auto'}
+                        >
+                            Ask a public question
+                        </Typography>
 
-                    <Box ml={'18rem'}>
-                        <img src="https://cdn.sstatic.net/Img/ask/background.svg?v=c56910988bdf" alt="" width={'200%'} />
+                        <Box
+                            sx={{
+                                display: { xs: 'none', sm: 'block' },
+                                width: { lg: "40vw", md: "35vw", sm: "30vw", }
+                            }}
+                        // ml={'18rem'}
+                        >
+                            <img src="https://cdn.sstatic.net/Img/ask/background.svg?v=c56910988bdf" alt="" width={'100%'} />
+                        </Box>
+                    </Toolbar>
+
+                    <Box sx={{
+                        maxWidth: { lg: "50vw", md: "60vw", sm: "70vw", xs: "90vw" },
+                        minWidth: { lg: "50vw", md: "60vw", sm: "70vw", xs: "90vw" },
+                        mt: 3
+                    }}>
+                        <Card variant="outlined" sx={{ bgcolor: "#edf5fd" }} >
+                            {instructionCard}
+                        </Card>
                     </Box>
-                </Toolbar>
 
-                <Box sx={{ maxWidth: "800px", mt: 3 }}>
-                    <Card variant="outlined" sx={{ bgcolor: "#edf5fd" }} >
-                        {instructionCard}
-                    </Card>
-                </Box>
+                    <Box sx={{
+                        display: 'flex',
+                        justifyContent: "space-between",
+                        border: "0px solid",
+                        mb: 5
+                    }}>
+                        <Box sx={{
+                            maxWidth: { lg: "50vw", md: "60vw", sm: "70vw", xs: "90vw" },
+                            minWidth: { lg: "50vw", md: "60vw", sm: "70vw", xs: "90vw" },
+                            mt: 3
+                        }}>
+                            <Card variant="outlined" sx={{ height: "11rem" }} >
+                                {<QuestionTitleCard
+                                    value={questionTitle}
+                                    onChange={(e) => setQuestionTitle(e.target.value)}
+                                    disabled={!questionTitle}
+                                    onClick={handleNext1Click}
+                                />}
+                            </Card>
+                        </Box>
 
-                <Box sx={{
-                    display: 'flex',
-                    justifyContent: "space-between",
-                    border: "0px solid",
-                    mb: 5
-                }}>
-                    <Box sx={{ width: "800px", mt: 3 }}>
+                        <Box sx={{
+                            width: "340px",
+                            display: { xs: 'none', sm: 'none', md: 'block' },
+                            mt: 3
+                        }}>
+                            <Card variant="outlined" sx={{ height: "11rem" }}>
+                                {titleSuggestionCard}
+                            </Card>
+                        </Box>
+                    </Box>
+
+                    <Box sx={{
+                        maxWidth: { lg: "50vw", md: "60vw", sm: "70vw", xs: "90vw" },
+                        minWidth: { lg: "50vw", md: "60vw", sm: "70vw", xs: "90vw" },
+                        mt: 3
+                    }}>
                         <Card variant="outlined" sx={{ height: "11rem" }} >
-                            {<QuestionTitleCard
-                                value={questionTitle}
-                                onChange={(e) => setQuestionTitle(e.target.value)}
-                                disabled={!questionTitle}
-                                onClick={handleNext1Click}
+                            {<QuestionTopicCard
+                                value={language}
+                                onChange={(e) => setLanguage(e.target.value)}
+                                disabled={!language}
+                                ref={input2Ref}
+                                onClick={handleNext2Click}
                             />}
                         </Card>
                     </Box>
 
-                    <Box sx={{ width: "340px", mt: 3 }}>
-                        <Card variant="outlined" sx={{ height: "11rem" }}>
-                            {titleSuggestionCard}
-                        </Card>
-                    </Box>
-                </Box>
+                    <Box sx={{
+                        display: 'flex',
+                        justifyContent: "space-between",
+                        border: "0px solid",
+                        mb: 5
+                    }} >
+                        <Box sx={{
+                            maxWidth: { lg: "50vw", md: "60vw", sm: "70vw", xs: "90vw" },
+                            minWidth: { lg: "50vw", md: "60vw", sm: "70vw", xs: "90vw" },
+                            mt: 3, mb: 2,
+                        }}>
+                            <Card variant="outlined" >
+                                <CardContent>
+                                    <Typography sx={{ fontWeight: 600 }} gutterBottom>
+                                        What are the details of your problem?
+                                    </Typography>
+                                    <Typography sx={{ fontSize: 12, mb: 1 }} component="div">
+                                        Introduce the problem and expand on what you put in the title. Minimum 20 characters.
+                                    </Typography>
+                                    <Box>
+                                        <TextareaAutosize
+                                            value={questionDescription}
+                                            onChange={(e) => setQuestionDescription(e.target.value)}
+                                            ref={input3Ref}
+                                            aria-label="textarea"
+                                            placeholder="Enter your text here"
+                                            rows={10}
+                                            style={{
+                                                minWidth: '100%',
+                                                maxWidth: "100%",
+                                                minHeight: '200px',
+                                            }}
+                                        />
+                                    </Box>
+                                </CardContent>
+                                <CardActions sx={{ ml: 1 }}>
+                                    <Button
+                                        size="small"
+                                        variant="contained"
+                                        onClick={handlePostNewQuestion}
+                                        disabled={!questionDescription}
+                                    >
+                                        Post
+                                    </Button>
+                                </CardActions>
 
-                <Box sx={{ width: "800px", mt: 3 }}>
-                    <Card variant="outlined" sx={{ height: "11rem" }} >
-                        {<QuestionTopicCard
-                            value={language}
-                            onChange={(e) => setLanguage(e.target.value)}
-                            disabled={!language}
-                            ref={input2Ref}
-                            onClick={handleNext2Click}
-                        />}
-                    </Card>
-                </Box>
-
-                <Box sx={{
-                    display: 'flex',
-                    justifyContent: "space-between",
-                    border: "0px solid",
-                    mb: 5
-                }} >
-                    <Box sx={{ width: "800px", mt: 3, mb: 2, }}>
-                        <Card variant="outlined" >
-                            <CardContent>
-                                <Typography sx={{ fontWeight: 600 }} gutterBottom>
-                                    What are the details of your problem?
-                                </Typography>
-                                <Typography sx={{ fontSize: 12, mb: 1 }} component="div">
-                                    Introduce the problem and expand on what you put in the title. Minimum 20 characters.
-                                </Typography>
-                                <Box>
-                                    <TextareaAutosize
-                                        value={questionDescription}
-                                        onChange={(e) => setQuestionDescription(e.target.value)}
-                                        ref={input3Ref}
-                                        aria-label="textarea"
-                                        placeholder="Enter your text here"
-                                        rows={10}
-                                        style={{
-                                            minWidth: '100%',
-                                            maxWidth: "100%",
-                                            minHeight: '200px',
-                                        }}
-                                    />
-                                </Box>
-                            </CardContent>
-                            <CardActions sx={{ ml: 1 }}>
-                                <Button
-                                    size="small"
-                                    variant="contained"
-                                    onClick={handlePostNewQuestion}
-                                    disabled={!questionDescription}
-                                >
-                                    Post
-                                </Button>
-                            </CardActions>
-
-                        </Card>
+                            </Card>
+                        </Box>
+                        <Box sx={{
+                            width: "340px",
+                            display: { xs: 'none', sm: 'none', md: 'block' },
+                            mt: 3
+                        }}>
+                            <Card variant="outlined" sx={{ height: "10rem" }}>
+                                {problemSuggestionCard}
+                            </Card>
+                        </Box>
                     </Box>
-                    <Box sx={{ width: "340px", mt: 3 }}>
-                        <Card variant="outlined" sx={{ height: "10rem" }}>
-                            {problemSuggestionCard}
-                        </Card>
-                    </Box>
-                </Box>
-            </Container>
+                </Container>
+            </Box>
         </>
     )
 }

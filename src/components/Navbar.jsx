@@ -15,11 +15,27 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
 
-import DrawerLeft from './DrawerLeft';
+import {
+    Divider,
+    Drawer,
+    List,
+    ListItemButton,
+    ListItemIcon,
+    ListItemText,
+} from "@mui/material";
+
+import HomeIcon from '@mui/icons-material/Home';
+import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
+import LocalOfferIcon from '@mui/icons-material/LocalOffer';
+import BookmarkIcon from '@mui/icons-material/Bookmark';
+import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
+import WorkIcon from '@mui/icons-material/Work';
+
 import { Link as LinkRoute } from 'react-router-dom'
 // import { Button } from '@mui/material';
 import Button from '@mui/joy/Button';
-import { Avatar } from '@mui/material';
+import DrawerCard from './DrawerCard';
+import { Avatar } from '@mui/joy';
 
 
 const Search = styled('div')(({ theme }) => ({
@@ -33,13 +49,17 @@ const Search = styled('div')(({ theme }) => ({
     marginRight: theme.spacing(2),
     marginLeft: 0,
     width: '100%',
+    [theme.breakpoints.up('xs')]: {
+        marginLeft: theme.spacing(1),
+        width: '40vw',
+    },
     [theme.breakpoints.up('sm')]: {
-        marginLeft: theme.spacing(4),
-        width: 'auto',
+        marginLeft: theme.spacing(2),
+        width: '50vw',
     },
     [theme.breakpoints.up('md')]: {
-        marginLeft: theme.spacing(8),
-        width: 'auto',
+        marginLeft: theme.spacing(6),
+        width: '60vw',
     },
     [theme.breakpoints.up('lg')]: {
         marginLeft: theme.spacing(10),
@@ -66,18 +86,28 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
         paddingLeft: `calc(1em + ${theme.spacing(4)})`,
         transition: theme.transitions.create('width'),
         width: '100%',
+        [theme.breakpoints.up('xs')]: {
+            width: '20ch',
+        },
+        [theme.breakpoints.up('sm')]: {
+            width: '30ch',
+        },
         [theme.breakpoints.up('md')]: {
-            width: '50ch',
+            width: '40ch',
         },
         [theme.breakpoints.up('lg')]: {
-            width: '80ch',
+            width: '70ch',
         },
     },
 }));
 
 
 
-export default function Navbar() {
+const authToken = sessionStorage.getItem('authToken');
+const drawerWidth = 240;
+
+export default function Navbar(props) {
+    const { window } = props;
 
     const [isLogin, setIsLogin] = React.useState(false)
 
@@ -86,6 +116,27 @@ export default function Navbar() {
 
     const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+
+
+    {/* ============ for drawer  ====================  */ }
+    const [mobileOpen, setMobileOpen] = React.useState(false);
+    const [selectedIndex, setSelectedIndex] = React.useState(0);
+
+    const handleDrawerToggle = () => {
+        setMobileOpen((prevState) => !prevState);
+    };
+
+    const handleListItemClick = (event, index) => {
+        setSelectedIndex(index);
+    };
+
+    const handleHomeRoute = (event, index) => {
+        setSelectedIndex(index);
+        navigate('/')
+    }
+    const container = window !== undefined ? () => window().document.body : undefined;
+    {/* ============ for drawer end ====================  */ }
+
 
     const handleProfileMenuOpen = (event) => {
         setAnchorEl(event.currentTarget);
@@ -98,6 +149,8 @@ export default function Navbar() {
     const handleMenuClose = () => {
         setAnchorEl(null);
         handleMobileMenuClose();
+        sessionStorage.removeItem('authToken')
+        setIsLogin(false)
     };
 
     const handleMobileMenuOpen = (event) => {
@@ -151,53 +204,46 @@ export default function Navbar() {
                     aria-label="show 17 new notifications"
                     color="inherit"
                 >
-                    <Avatar sx={{
-                        bgcolor: "#637bfe",
-                        width: 32,
-                        height: 32
-                    }}>
-                        V
-                    </Avatar>
+                    <Avatar />
                 </IconButton>
             </MenuItem>
             <MenuItem>
-                <Button variant="plain">Logout</Button>
+                <Button
+                 onClick={handleLogout} 
+                 variant="plain">Logout</Button>
             </MenuItem>
         </Menu>
     );
 
-
-    const [state, setState] = React.useState({
-        top: false,
-        left: false,
-        bottom: false,
-        right: false,
-    });
-
-    const toggleDrawer = (anchor, open) => (event) => {
-        if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
-            return;
+    React.useEffect(()=>{
+        if(authToken){
+            setIsLogin(true)
         }
+    },[])
 
-        setState({ ...state, [anchor]: open });
-    };
 
+    function handleLogout(){
+        sessionStorage.removeItem('authToken');
+        setIsLogin(false);
+    }
 
     return (
-        <Box sx={{ flexGrow: 1, width: "100vw" }}>
-            <AppBar position="static"
+        <Box sx={{ flexGrow: 1, minWidth: "100vw", m: 'auto', mb: 8.2 }}>
+            <AppBar position="fixed"
                 sx={{
-                    bgcolor: "#fff"
+                    bgcolor: "#fff",
                 }}
             >
-                <Toolbar sx={{ width: "80vw", m: "auto", border: '2px solid red' }}>
+                <Toolbar sx={{
+                    minWidth: { lg: "80vw", md: "85vw", sm: "95vw", xs: "100vw" },
+                    m: "auto",
+                }}>
                     <IconButton
-                        size="large"
-                        edge="start"
                         color="inherit"
                         aria-label="open drawer"
+                        edge="start"
+                        onClick={handleDrawerToggle}
                         sx={{ mr: 2, display: { lg: 'none' } }}
-                        onClick={toggleDrawer('left', true)}
                     >
                         <MenuIcon color='action' />
                     </IconButton>
@@ -224,7 +270,7 @@ export default function Navbar() {
                     </Search>
                     <Box sx={{ flexGrow: 1 }} />
 
-                    <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+                    <Box sx={{ display: { xs: 'none', md: 'flex', lg: 'flex' } }}>
                         {isLogin ? (
                             <IconButton
                                 size="large"
@@ -232,13 +278,7 @@ export default function Navbar() {
                                 color="inherit"
                                 onClick={handleProfileMenuOpen}
                             >
-                                <Avatar sx={{
-                                    bgcolor: "#637bfe",
-                                    width: 32,
-                                    height: 32
-                                }}>
-                                    V
-                                </Avatar>
+                                <Avatar />
                             </IconButton>
                         ) : (
                             <LinkRoute to={'/signup'}>
@@ -246,7 +286,7 @@ export default function Navbar() {
                             </LinkRoute>
                         )}
                     </Box>
-                    <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
+                    <Box sx={{ pr: 5, display: { xs: 'flex', md: 'none', lg: 'none' } }}>
                         {/* <IconButton
                             size="large"
                             aria-label="show more"
@@ -264,13 +304,7 @@ export default function Navbar() {
                                 color="inherit"
                                 onClick={handleProfileMenuOpen}
                             >
-                                <Avatar sx={{
-                                    bgcolor: "#637bfe",
-                                    width: 32,
-                                    height: 32
-                                }}>
-                                    V
-                                </Avatar>
+                                <Avatar />
                             </IconButton>
                         ) : (
                             <LinkRoute to={'/signup'}>
@@ -282,40 +316,95 @@ export default function Navbar() {
             </AppBar>
             {renderMobileMenu}
             {renderMenu}
-            <DrawerLeft
-                state={state}
-                toggleDrawer={toggleDrawer}
-            />
+
+            <Drawer
+                container={container}
+                variant="temporary"
+                open={mobileOpen}
+                onClose={handleDrawerToggle}
+                ModalProps={{
+                    keepMounted: true, // Better open performance on mobile.
+                }}
+                sx={{
+                    display: { xs: 'block', sm: 'block', lg: 'none' },
+                    '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
+                }}
+            >
+                <Box onClick={handleDrawerToggle}>
+                    <Typography variant="h6" sx={{ my: 2, pl: 6 }}>
+                        QuestHub
+                    </Typography>
+                    <Divider />
+
+                    <List component="nav" aria-label="main mailbox folders" >
+                        <ListItemButton
+                            selected={selectedIndex === 0}
+                            onClick={(event) => handleHomeRoute(event, 0)}
+                        >
+                            <ListItemIcon >
+                                <HomeIcon sx={{ pl: 2 }} />
+                            </ListItemIcon>
+                            <ListItemText primary="Home" />
+                        </ListItemButton>
+
+                        <ListItemButton
+                            selected={selectedIndex === 1}
+                            onClick={(event) => handleHomeRoute(event, 1)}
+                        >
+                            <ListItemIcon>
+                                <QuestionAnswerIcon sx={{ pl: 2 }} />
+                            </ListItemIcon>
+                            <ListItemText primary="Questions" />
+                        </ListItemButton>
+
+                        <ListItemButton
+                            selected={selectedIndex === 2}
+                            onClick={(event) => handleListItemClick(event, 2)}
+                        >
+                            <ListItemIcon>
+                                <LocalOfferIcon sx={{ pl: 2 }} />
+                            </ListItemIcon>
+                            <ListItemText primary="Tags" />
+                        </ListItemButton>
+                    </List>
+
+                    <List component="nav" aria-label="main mailbox folders">
+                        <ListItemButton
+                            selected={selectedIndex === 3}
+                            onClick={(event) => handleListItemClick(event, 3)}
+                        >
+                            <ListItemIcon>
+                                <BookmarkIcon sx={{ pl: 2 }} />
+                            </ListItemIcon>
+                            <ListItemText primary="Saves" />
+                        </ListItemButton>
+
+                        <ListItemButton
+                            selected={selectedIndex === 4}
+                            onClick={(event) => handleListItemClick(event, 4)}
+                        >
+                            <ListItemIcon>
+                                <PeopleAltIcon sx={{ pl: 2 }} />
+                            </ListItemIcon>
+                            <ListItemText primary="Users" />
+                        </ListItemButton>
+
+                        <ListItemButton
+                            selected={selectedIndex === 5}
+                            onClick={(event) => handleListItemClick(event, 5)}
+                        >
+                            <ListItemIcon>
+                                <WorkIcon sx={{ pl: 2 }} />
+                            </ListItemIcon>
+                            <ListItemText primary="Companies" />
+                        </ListItemButton>
+                    </List>
+                </Box>
+            </Drawer>
+            {/* <DrawerCard /> */}
         </Box>
     );
 }
-
-// export const Navbar = () => {
-
-//     return <Box >
-//         <AppBar sx={{ bgcolor: "#fff", flexGrow: 1 }}>
-//             <Toolbar sx={{
-//                 width: "80vw",
-//                 m: "auto",
-//                 // border: "1px solid red",
-//             }}>
-//                 <Typography variant="h5" component="div" sx={{ flexGrow: 1, color: "black" }}>
-//                     QuestHub
-//                 </Typography>
-
-//                 <Search>
-//                     <SearchIconWrapper>
-//                         <SearchIcon color="action" />
-//                     </SearchIconWrapper>
-//                     <StyledInputBase
-//                         placeholder="Search…"
-//                         inputProps={{ 'aria-label': 'search' }}
-//                     />
-//                 </Search>
-//             </Toolbar>
-//         </AppBar>
-//     </Box>
-// }
 
 
 

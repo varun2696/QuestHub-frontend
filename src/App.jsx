@@ -8,7 +8,7 @@ function App() {
     <div className='main-content'>
       <Navbar />
       <AllRoutes />
-    </div> 
+    </div>
 
   )
 }

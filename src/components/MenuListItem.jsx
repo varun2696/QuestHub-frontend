@@ -35,7 +35,8 @@ export default function MenuListItem() {
             width: '100%',
             height: '100vh',
             maxWidth: 160,
-            bgcolor: 'background.paper'
+            bgcolor: 'background.paper',
+            display: {xs: 'none', md:"none", lg: "block"}
         }}>
             <List component="nav" aria-label="main mailbox folders" >
                 <ListItemButton

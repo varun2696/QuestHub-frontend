@@ -3,16 +3,14 @@ import Chip from '@mui/material/Chip';
 
 import { Link as LinkRoute } from 'react-router-dom'
 
-const QuestionCard = ({username, votes, answers, language, questionTitle, id, userFirstLetter}) => {
+const QuestionCard = ({ username, votes, answers, language, questionTitle, id, userFirstLetter }) => {
     return (
         <>
             <LinkRoute to={`/question/${id}`} className='txt-dec-none'>
                 <Card sx={{ p: 2, bgcolor: "#fdf7e7" }}>
                     <Stack direction={'row'} spacing={2}>
                         <Stack
-                            spacing={1.5}
-                            width={"4rem"}
-                        // border="1px solid"
+                            spacing={1}
                         >
                             <Stack direction={'row'} spacing={0.5} >
                                 <Typography fontSize={13}>{votes}</Typography>
@@ -27,10 +25,16 @@ const QuestionCard = ({username, votes, answers, language, questionTitle, id, us
 
                         <Stack
                             spacing={1}
-                            // border="1px solid"
-                            width={'42rem'}
+                            sx={{
+                                minWidth: { lg: "38vw", md: "50vw", sm: "85vw", xs: "70vw" }
+                            }}
                         >
-                            <Typography sx={{ display: "flex", color: '#3797d8', fontSize: '18px' }}>
+                            <Typography sx={{
+                                display: "flex",
+                                textAlign:'left',
+                                color: '#3797d8',
+                                fontSize: {lg:"1.3rem", md:"1.2rem", sm:"1.2rem", xs:"0.8rem"}
+                            }}>
                                 {questionTitle}
                             </Typography>
                             <Stack direction={'row'} justifyContent={'space-between'}>
@@ -39,14 +43,12 @@ const QuestionCard = ({username, votes, answers, language, questionTitle, id, us
                                 </Stack>
 
                                 <Stack direction={'row'} alignItems={"center"} spacing={1}>
-                                    <Avatar
-                                        sx={{ width: 28, height: 28 }}
-                                    >
-                                        {userFirstLetter}
-                                    </Avatar>
                                     <Typography>
                                         {username}
                                     </Typography>
+                                    <Avatar sx={{ width: 28, height: 28 }}>
+                                        {userFirstLetter}
+                                    </Avatar>
                                 </Stack>
                             </Stack>
                         </Stack>

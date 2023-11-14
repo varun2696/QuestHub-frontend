@@ -11,9 +11,10 @@ const RightCardHome = () => {
         <>
             <Box
                 sx={{
-                    width: "300px",
+                    width: "17rem",
                     border: "1px solid #f5d584",
                     height: "auto",
+                    display: {xs: 'none',sm:'none', md:"block", lg: "block"}
                 }}>
                 <Box>
                     <Typography sx={{ p: 2, bgcolor: '#faecc6', fontWeight: 500 }}>

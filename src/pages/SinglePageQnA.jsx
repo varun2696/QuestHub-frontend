@@ -1,4 +1,4 @@
-import { Box, Button, Card, CardActions, CardContent, Divider, Stack, Typography } from '@mui/material';
+import { Box, Card, CardActions, CardContent, Divider, Stack, Typography } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Link as LinkRoute, useParams } from 'react-router-dom'
 
@@ -8,6 +8,8 @@ import axios from 'axios';
 import { base_url } from '../api';
 import { useEffect, useState } from 'react';
 import TextareaAutosize from '@mui/material/TextareaAutosize';
+import AnswerCard from '../components/AnswerCard';
+import { Button } from '@mui/joy';
 
 
 const getQuestionbyId = async (id) => {
@@ -102,23 +104,22 @@ const SinglePageQnA = () => {
 
     return (
         <Box sx={{
-            width: "80vw",
+            // width: {xs: "95vw", sm:'92vw', md:"90vw", lg:"85vw"},
+            width: { lg: "80vw", md: "95vw", sm: '98vw', xs: "100vw", },
             m: 'auto',
-            mt: 5,
-            // border: "1px solid",
-            // height: "80vh"
+            // mt: 5,
         }}>
             <Stack direction={'row'} spacing={1}>
                 <Box sx={{
                     width: "12vw",
-                    // border: "1px solid",
-                    // height: "80vh"
+                    border: "1px solid",
+                    display:{xs:'none', sm:'none', md:'block'}
                 }}>
                     <MenuListItem />
                 </Box>
                 <Box sx={{
                     width: "68vw",
-                    // border: "1px solid",
+                    border: "1px solid",
                     // height: "80vh"
                 }}>
                     <Box>
@@ -131,7 +132,7 @@ const SinglePageQnA = () => {
                                 {data && data?.questionTitle}
                             </Typography>
                             <LinkRoute to={'/ask-question'}>
-                                <Button variant="contained">
+                                <Button variant="solid">
                                     Ask Question
                                 </Button>
                             </LinkRoute>
@@ -167,13 +168,19 @@ const SinglePageQnA = () => {
 
                             {data && data?.answers?.map((el) => {
                                 return (
-                                    <Card sx={{ mt: 2 }} key={el._id}>
-                                        <CardContent>
-                                            <Typography>
-                                                {el.answerText}
-                                            </Typography>
-                                        </CardContent>
-                                    </Card>
+                                    
+                                    <AnswerCard
+                                    key={el._id}
+                                    answerText={el.answerText}
+                                    username={el.username}
+                                     />
+                                    // <Card sx={{ mt: 2 }} key={el._id}>
+                                    //     <CardContent>
+                                    //         <Typography>
+                                    //             {el.answerText}
+                                    //         </Typography>
+                                    //     </CardContent>
+                                    // </Card>
                                 )
                             })}
 
@@ -189,7 +196,7 @@ const SinglePageQnA = () => {
                                                 onChange={handleTextareaChange}
                                                 aria-label="textarea"
                                                 placeholder="Enter your text here"
-                                                rows={10} // Adjust as needed
+                                                rows={10}
                                                 style={{
                                                     minWidth: '100%',
                                                     maxWidth: "100%",
@@ -200,12 +207,11 @@ const SinglePageQnA = () => {
                                     </CardContent>
                                     <CardActions sx={{ ml: 1 }}>
                                         <Button
-                                            size="small"
-                                            variant="contained"
+                                            variant="solid"
                                             onClick={handlePostAnswer}
                                             disabled={!textareaValue}
                                         >
-                                            Post
+                                            POST
                                         </Button>
                                     </CardActions>
                                 </Card>
