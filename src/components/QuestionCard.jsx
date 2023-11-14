@@ -26,7 +26,8 @@ const QuestionCard = ({ username, votes, answers, language, questionTitle, id, u
                         <Stack
                             spacing={1}
                             sx={{
-                                minWidth: { lg: "38vw", md: "50vw", sm: "85vw", xs: "70vw" }
+                                width:'40rem'
+                                // border:"1px solid"
                             }}
                         >
                             <Typography sx={{

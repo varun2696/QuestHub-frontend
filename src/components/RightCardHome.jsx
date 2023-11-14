@@ -11,7 +11,7 @@ const RightCardHome = () => {
         <>
             <Box
                 sx={{
-                    width: "17rem",
+                    width: { md:"17rem", lg: "18rem",xl:"18.6rem"},
                     border: "1px solid #f5d584",
                     height: "auto",
                     display: {xs: 'none',sm:'none', md:"block", lg: "block"}

@@ -49,12 +49,14 @@ export default function HomePage() {
             m: 'auto',
         }}>
             <Grid container spacing={1} m={'auto'}>
-                <Grid xs={'auto'}>
+                <Grid xs={'auto'} sx={{
+                    display: { xs: 'none', sm: 'none', md: "block", lg: "block" }
+                }}>
                     <Item>
                         <MenuListItem />
                     </Item>
                 </Grid>
-                <Grid xs={12} sm={12} md={8} lg={7}>
+                <Grid xs={12} sm={12} md={6} lg={7}>
                     <Item>
                         <Box sx={{ height: '100vh' }}>
                             <Toolbar sx={{ width: "auto", pb: 6 }}>
@@ -94,7 +96,11 @@ export default function HomePage() {
                     </Item>
                 </Grid>
 
-                <Grid md={3} lg={2.5}>
+                <Grid xs={2} sm={2} md={3} lg={3}
+                    sx={{
+                        display: { xs: 'none', sm: 'none', md: "block", lg: "block" }
+                    }}
+                >
                     <RightCardHome />
                 </Grid>
             </Grid>

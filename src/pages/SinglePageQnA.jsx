@@ -104,29 +104,34 @@ const SinglePageQnA = () => {
 
     return (
         <Box sx={{
-            // width: {xs: "95vw", sm:'92vw', md:"90vw", lg:"85vw"},
-            width: { lg: "80vw", md: "95vw", sm: '98vw', xs: "100vw", },
+            flexGrow: 1,
+            maxWidth: { lg: "80vw", md: "94vw", sm: '96vw', xs: "98vw", },
             m: 'auto',
-            // mt: 5,
+            // border: '2px solid red'
         }}>
             <Stack direction={'row'} spacing={1}>
                 <Box sx={{
-                    width: "12vw",
-                    border: "1px solid",
-                    display:{xs:'none', sm:'none', md:'block'}
+                    width: { md: '17vw', lg: '13vw' },
+                    // border: "1px solid",
+                    display: { xs: 'none', sm: 'none', md: 'block', lg: 'block' }
                 }}>
                     <MenuListItem />
                 </Box>
+
                 <Box sx={{
-                    width: "68vw",
-                    border: "1px solid",
+                    width: { lg: "70vw", md: "90vw", sm: '95vw', xs: "95vw", },
+                    // border: "1px solid red",
                     // height: "80vh"
                 }}>
                     <Box>
                         <Stack direction={'row'} justifyContent={"space-between"} p={2}>
                             <Typography
-                                variant="h6"
-                                sx={{ mr: 'auto' }}
+                                variant="h5"
+                                fontWeight={400}
+                                sx={{
+                                    mr: 'auto',
+                                    fontSize: { lg: '2.5rem', md: "2rem", sm: "1.5rem", xs: "1rem" }
+                                }}
                             >
                                 {/* questionTitle */}
                                 {data && data?.questionTitle}
@@ -145,8 +150,9 @@ const SinglePageQnA = () => {
                         </Stack>
                     </Box>
                     <Divider />
-                    <Grid container spacing={2} sx={{ mt: 2, border: "0px solid" }}>
-                        <Grid xs={8.4}>
+
+                    <Grid container spacing={1} sx={{ mt: 2, }}>
+                        <Grid lg={8.4} md={8} sm={12}  xs={12}>
 
                             <Card sx={{ mt: 2 }} >
                                 <CardContent>
@@ -168,12 +174,12 @@ const SinglePageQnA = () => {
 
                             {data && data?.answers?.map((el) => {
                                 return (
-                                    
+
                                     <AnswerCard
-                                    key={el._id}
-                                    answerText={el.answerText}
-                                    username={el.username}
-                                     />
+                                        key={el._id}
+                                        answerText={el.answerText}
+                                        username={el.username}
+                                    />
                                     // <Card sx={{ mt: 2 }} key={el._id}>
                                     //     <CardContent>
                                     //         <Typography>
@@ -217,7 +223,11 @@ const SinglePageQnA = () => {
                                 </Card>
                             </Box>
                         </Grid>
-                        <Grid xs={3.4}>
+                        <Grid lg={3.6} md={4}
+                            sx={{
+                                display: { xs: 'none', sm: 'none', md: "block", lg: "block" }
+                            }}
+                        >
                             <RightCardHome />
                         </Grid>
                     </Grid>

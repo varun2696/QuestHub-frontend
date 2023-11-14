@@ -246,7 +246,7 @@ const AskQuestion = () => {
             <Box sx={{
                 width: { lg: "80vw", md: "95vw", sm: '98vw', xs: "100vw", },
                 minWidth: { lg: "80vw", md: "95vw", sm: '98vw', xs: "100vw", },
-                border: '1px solid',
+                // border: '1px solid', 
                 m: 'auto'
             }}
             >
