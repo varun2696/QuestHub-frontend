@@ -1,11 +1,13 @@
-import { Navigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { Navigate, useLocation } from "react-router-dom";
 
 
 const PrivateRoute = ({ children }) => {
-    
-    const token = sessionStorage.getItem('authToken');
+    const location = useLocation()
+    // const {auth} = useSelector(store => store.authReducer)
+    const authToken = sessionStorage.getItem('authToken');
 
-    return token ? children : <Navigate to='/signin' />
+    return authToken ? children : <Navigate to='/signin' state={location.pathname} replace />
 }
 
 export default PrivateRoute

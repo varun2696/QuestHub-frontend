@@ -36,6 +36,7 @@ import { Link as LinkRoute } from 'react-router-dom'
 import Button from '@mui/joy/Button';
 import DrawerCard from './DrawerCard';
 import { Avatar } from '@mui/joy';
+import { useSelector } from 'react-redux';
 
 
 const Search = styled('div')(({ theme }) => ({
@@ -101,21 +102,20 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     },
 }));
 
-
-
-const authToken = sessionStorage.getItem('authToken');
+const authToken = sessionStorage.getItem('authToken') || null
 const drawerWidth = 240;
 
 export default function Navbar(props) {
     const { window } = props;
-
-    const [isLogin, setIsLogin] = React.useState(false)
 
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
 
     const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+
+    const [isLogin, setIsLogin] = React.useState(false)
+
 
 
     {/* ============ for drawer  ====================  */ }
@@ -138,6 +138,7 @@ export default function Navbar(props) {
     {/* ============ for drawer end ====================  */ }
 
 
+
     const handleProfileMenuOpen = (event) => {
         setAnchorEl(event.currentTarget);
     };
@@ -150,7 +151,7 @@ export default function Navbar(props) {
         setAnchorEl(null);
         handleMobileMenuClose();
         sessionStorage.removeItem('authToken')
-        setIsLogin(false)
+        setIsLogin(false);
     };
 
     const handleMobileMenuOpen = (event) => {
@@ -209,23 +210,24 @@ export default function Navbar(props) {
             </MenuItem>
             <MenuItem>
                 <Button
-                 onClick={handleLogout} 
-                 variant="plain">Logout</Button>
+                    onClick={handleLogout}
+                    variant="plain">Logout</Button>
             </MenuItem>
         </Menu>
     );
 
-    React.useEffect(()=>{
-        if(authToken){
-            setIsLogin(true)
-        }
-    },[])
 
 
-    function handleLogout(){
+    function handleLogout() {
         sessionStorage.removeItem('authToken');
         setIsLogin(false);
     }
+
+    React.useEffect(() => {
+        if (authToken) {
+            setIsLogin(true)
+        }
+    }, [])
 
     return (
         <Box sx={{ flexGrow: 1, minWidth: "100vw", m: 'auto', mb: 8.2 }}>

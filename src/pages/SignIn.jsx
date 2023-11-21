@@ -13,9 +13,9 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
-import { Link as LinkRoute, Navigate, useNavigate } from 'react-router-dom'
-import { base_url } from '../api';
-import axios from 'axios';
+import { Link as LinkRoute, Navigate, useLocation, useNavigate } from 'react-router-dom'
+import { useDispatch } from 'react-redux';
+import { userSignIn } from '../redux/auth/action';
 
 const defaultTheme = createTheme();
 
@@ -25,7 +25,10 @@ export default function SignIn() {
     const [password, setPassword] = React.useState("");
 
     const navigate = useNavigate();
-    const handleSubmit = async (event) => {
+    const dispatch = useDispatch();
+    const location = useLocation();
+
+    const handleSubmit = (event) => {
         event.preventDefault();
 
         if (email === "" || password === "") {
@@ -38,21 +41,10 @@ export default function SignIn() {
             }
             // console.log({ userData })
 
-            await axios.post(`${base_url}/users/login`, userData)
-                .then(res => {
-                    // console.log({ res });
-                    if(res.data.token){
-                        sessionStorage.setItem('authToken', res.data.token)
-                        alert(res.data.msg)
-                        navigate('/')
-                    }
-                    else{
-                        alert(res.data.msg)
-                    }
-                })
-                .catch(err => {
-                    console.log({ err });
-                })
+            dispatch(userSignIn(userData)).then(()=>{
+                alert("Login Successful!!")
+                navigate(location.state, {replace:true})
+            })
         }
     };
 

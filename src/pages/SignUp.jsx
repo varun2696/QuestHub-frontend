@@ -12,9 +12,9 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
-import { Link as LinkRoute } from 'react-router-dom'
-import axios from 'axios';
-import { base_url } from '../api';
+import { Link as LinkRoute, useNavigate } from 'react-router-dom'
+import { useDispatch } from 'react-redux';
+import { userSignUp } from '../redux/auth/action';
 
 // TODO remove, this demo shouldn't need to reset the theme.
 
@@ -27,8 +27,10 @@ export default function SignUp() {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
 
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  const handleSubmit = async (event) => {
+  const handleSubmit =  (event) => {
     event.preventDefault();
 
     if (firstName === "" || lastName === "" || email === "" || password === "") {
@@ -41,17 +43,11 @@ export default function SignUp() {
         password,
       }
       // console.log({ userData })
-
-      try {
-        let res = await axios.post(`${base_url}/users/signup`, userData)
-        console.log({ res });
-        alert(res.data.msg)
-
-      } catch (error) {
-        console.log({ error });
-      }
-
-
+ 
+      dispatch(userSignUp(userData))
+      .then(() => {
+       navigate("/signin")
+      })
     }
   };
 

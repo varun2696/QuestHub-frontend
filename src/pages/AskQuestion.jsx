@@ -14,9 +14,9 @@ import {
 }
     from '@mui/material'
 
-import { base_url } from '../api'
-import axios from 'axios'
 import { forwardRef, useRef, useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { postNewQuestion } from '../redux/questions/action'
 
 
 const instructionCard = (
@@ -173,27 +173,27 @@ const problemSuggestionCard = (
 )
 
 
-const postNewQuestion = async (data) => {
-    try {
-        const authToken = sessionStorage.getItem('authToken');
+// const postNewQuestion = async (data) => {
+//     try {
+//         const authToken = sessionStorage.getItem('authToken');
 
-        if (authToken) {
-            const headers = {
-                Authorization: `Bearer ${authToken}`,
-            };
+//         if (authToken) {
+//             const headers = {
+//                 Authorization: `Bearer ${authToken}`,
+//             };
 
-            const response = await axios.post(`${base_url}/question/create`, data, { headers });
-            // console.log("response", response);
-            return response;
-        }
-        else {
-            alert("Please Login")
-        }
-    }
-    catch (error) {
-        console.error('Error fetching data', error);
-    }
-}
+//             const response = await axios.post(`${base_url}/question/create`, data, { headers });
+//             // console.log("response", response);
+//             return response;
+//         }
+//         else {
+//             alert("Please Login")
+//         }
+//     }
+//     catch (error) {
+//         console.error('Error fetching data', error);
+//     }
+// }
 
 
 const AskQuestion = () => {
@@ -203,6 +203,8 @@ const AskQuestion = () => {
 
     const input2Ref = useRef(null);
     const input3Ref = useRef(null);
+
+    const dispatch = useDispatch()
 
     const handleNext1Click = () => {
         input2Ref.current.focus();
@@ -227,17 +229,25 @@ const AskQuestion = () => {
             alert("Please Enter all fields")
         }
         else {
-            postNewQuestion(postAnswer)
-                .then(res => {
-                    console.log(res.data.msg)
-                    setQuestionTitle("");
-                    setQuestionDescription("");
-                    setLanguage("");
-                    alert(res.data.msg)
-                })
-                .catch(err => {
-                    console.log({ err });
-                })
+
+            dispatch(postNewQuestion(postAnswer)).then(()=>{
+                setQuestionTitle("");
+                setQuestionDescription("");
+                setLanguage("");
+                alert("Your Qusetion Posted")
+            })
+            
+            // postNewQuestion(postAnswer)
+            //     .then(res => {
+            //         console.log(res.data.msg)
+            //         setQuestionTitle("");
+            //         setQuestionDescription("");
+            //         setLanguage("");
+            //         alert(res.data.msg)
+            //     })
+            //     .catch(err => {
+            //         console.log({ err });
+            //     })
         }
     }
 

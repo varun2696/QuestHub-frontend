@@ -9,14 +9,12 @@ import { Link as LinkRoute } from 'react-router-dom'
 import MenuListItem from '../components/MenuListItem';
 import QuestionCard from '../components/QuestionCard';
 import RightCardHome from '../components/RightCardHome';
-import axios from 'axios';
-import { base_url } from '../api';
 import { Button } from '@mui/joy';
+import { useDispatch, useSelector } from 'react-redux';
+import { getQuestions } from '../redux/questions/action';
 
 
-const getQuestions = async () => {
-    return await axios.get(`${base_url}/questions`)
-}
+
 
 const Item = styled(Paper)(({ theme }) => ({
     // backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -28,19 +26,13 @@ const Item = styled(Paper)(({ theme }) => ({
 
 
 export default function HomePage() {
-    const [data, setData] = React.useState([]);
+    const { data } = useSelector(state => state.questionsReducer)
+    const dispatch = useDispatch()
 
     React.useEffect(() => {
-
-        getQuestions().then(res => {
-            // console.log(res.data)
-            setData(res.data);
-        })
-            .catch(err => {
-                console.log(err);
-            })
-
+        dispatch(getQuestions)
     }, [])
+    
     return (
         <Box sx={{
             flexGrow: 1,

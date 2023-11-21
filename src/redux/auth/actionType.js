@@ -1,0 +1,10 @@
+// user sign_up 
+export const USER_SIGN_UP_REQ = "USER_SIGN_UP_REQ"
+export const USER_SIGN_UP_SUCCESS = "USER_SIGN_UP_SUCCESS"
+export const USER_SIGN_UP_FAILURE = "USER_SIGN_UP_FAILURE"
+
+
+// user sign_in
+export const USER_SIGN_IN_REQ = "USER_SIGN_IN_REQ"
+export const USER_SIGN_IN_SUCCESS = "USER_SIGN_IN_SUCCESS"
+export const USER_SIGN_IN_FAILURE = "USER_SIGN_IN_FAILURE"

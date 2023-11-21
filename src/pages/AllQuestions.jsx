@@ -4,35 +4,18 @@ import Grid from '@mui/material/Unstable_Grid2';
 import { Divider, Toolbar, Typography } from '@mui/material';
 import { Button } from '@mui/joy';
 import { Link as LinkRoute } from 'react-router-dom'
-import axios from 'axios';
 
 import MenuListItem from '../components/MenuListItem';
 import RightCardHome from '../components/RightCardHome';
 import AllQuestionCard from '../components/AllQuestionCard';
-import { base_url } from '../api';
-
-
-
-const getQuestions = async () => {
-    return await axios.get(`${base_url}/questions`)
-}
+import { useSelector } from 'react-redux';
 
 
 
 export default function AllQuestions() {
-    const [data, setData] = React.useState([]);
+    const {data} = useSelector((state) => state.questionsReducer)
 
-    React.useEffect(() => {
-
-        getQuestions().then(res => {
-            // console.log(res.data)
-            setData(res.data);
-        })
-            .catch(err => {
-                console.log(err);
-            })
-
-    }, [])
+    
     return (
         <Box sx={{
             flexGrow: 1,

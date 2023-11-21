@@ -10,64 +10,20 @@ import { useEffect, useState } from 'react';
 import TextareaAutosize from '@mui/material/TextareaAutosize';
 import AnswerCard from '../components/AnswerCard';
 import { Button } from '@mui/joy';
+import { useDispatch, useSelector } from 'react-redux';
+import { getQuestionbyId, postYourAnswer } from '../redux/questions/action';
 
-
-const getQuestionbyId = async (id) => {
-
-    try {
-        // Retrieve the token
-        const authToken = sessionStorage.getItem('authToken');
-
-        // Set the authorization header with the token
-        if (authToken) {
-            const headers = {
-                Authorization: `Bearer ${authToken}`,
-            };
-
-            // Make the GET request with the headers
-            const response = await axios.get(`${base_url}/question/${id}`, { headers });
-            // console.log("response", response);
-            return response;
-        }
-        else {
-            alert("Please Login")
-        }
-    }
-    catch (error) {
-        console.error('Error fetching data', error);
-    }
-};
-
-const postYourAnswer = async (id, data) => {
-    try {
-        const authToken = sessionStorage.getItem('authToken');
-
-        if (authToken) {
-            const headers = {
-                Authorization: `Bearer ${authToken}`,
-            };
-
-            const response = await axios.post(`${base_url}/question/${id}/answers`, data, { headers });
-            // console.log("response", response);
-            return response;
-        }
-        else {
-            alert("Please Login")
-        }
-    }
-    catch (error) {
-        console.error('Error fetching data', error);
-    }
-}
 
 
 
 const SinglePageQnA = () => {
 
-    const [data, setData] = useState([]);
     const { id } = useParams();
     const [textareaValue, setTextareaValue] = useState('');
 
+    const { questionById } = useSelector(state => state.questionsReducer)
+    // console.log(("quest", questionById));
+    const dispatch = useDispatch()
 
     const handlePostAnswer = () => {
         // console.log("text", textareaValue)
@@ -75,15 +31,13 @@ const SinglePageQnA = () => {
         const postAnswer = {
             answerText: textareaValue
         }
-        postYourAnswer(id, postAnswer)
-            .then(res => {
-                console.log(res.data.msg)
+
+        dispatch(postYourAnswer(id, postAnswer))
+            .then(() => {
                 setTextareaValue("");
-                alert(res.data.msg)
+                alert("Your ANS Posted")
             })
-            .catch(err => {
-                console.log({ err });
-            })
+
     }
 
     const handleTextareaChange = (event) => {
@@ -91,14 +45,7 @@ const SinglePageQnA = () => {
     };
 
     useEffect(() => {
-        getQuestionbyId(id)
-            .then(res => {
-                // console.log("res", res.data);
-                setData(res.data)
-            })
-            .catch(err => {
-                console.log({ err });
-            })
+        dispatch(getQuestionbyId(id))
     }, [])
 
 
@@ -135,12 +82,12 @@ const SinglePageQnA = () => {
                                 fontWeight={400}
                                 sx={{
                                     mr: 'auto',
-                                    pt:1,
+                                    pt: 1,
                                     fontSize: { lg: '2rem', md: "2rem", sm: "1.5rem", xs: "1rem" },
-                                    width:"80%"
+                                    width: "80%"
                                 }}
                             >
-                                {data && data?.questionTitle}
+                                {questionById && questionById?.questionTitle}
                             </Typography>
                             <LinkRoute to={'/ask-question'} sx={{ border: '2px solid' }}>
                                 <Button variant="solid"  >
@@ -167,7 +114,7 @@ const SinglePageQnA = () => {
                                     </Typography>
                                     <br />
                                     <Typography>
-                                        {data && data?.questionDescription}
+                                        {questionById && questionById?.questionDescription}
                                     </Typography>
                                 </CardContent>
                             </Card>
@@ -175,24 +122,16 @@ const SinglePageQnA = () => {
                                 fontSize={'1.5rem'}
                                 sx={{ pb: 1, pt: 2 }}>
                                 {/* 2 Answers */}
-                                {data && data?.answers?.length} Answers
+                                {questionById && questionById?.answers?.length} Answers
                             </Typography>
 
-                            {data && data?.answers?.map((el) => {
+                            {questionById && questionById?.answers?.map((el) => {
                                 return (
-
                                     <AnswerCard
                                         key={el._id}
                                         answerText={el.answerText}
                                         username={el.username}
                                     />
-                                    // <Card sx={{ mt: 2 }} key={el._id}>
-                                    //     <CardContent>
-                                    //         <Typography>
-                                    //             {el.answerText}
-                                    //         </Typography>
-                                    //     </CardContent>
-                                    // </Card>
                                 )
                             })}
 
@@ -244,6 +183,59 @@ const SinglePageQnA = () => {
 }
 
 export default SinglePageQnA
+
+
+
+
+
+// const getQuestionbyId = async (id) => {
+
+//     try {
+//         // Retrieve the token
+//         const authToken = sessionStorage.getItem('authToken');
+
+//         // Set the authorization header with the token
+//         if (authToken) {
+//             const headers = {
+//                 Authorization: `Bearer ${authToken}`,
+//             };
+
+//             // Make the GET request with the headers
+//             const response = await axios.get(`${base_url}/question/${id}`, { headers });
+//             // console.log("response", response);
+//             return response;
+//         }
+//         else {
+//             alert("Please Login")
+//         }
+//     }
+//     catch (error) {
+//         console.error('Error fetching data', error);
+//     }
+// };
+
+// const postYourAnswer = async (id, data) => {
+//     try {
+//         const authToken = sessionStorage.getItem('authToken');
+
+//         if (authToken) {
+//             const headers = {
+//                 Authorization: `Bearer ${authToken}`,
+//             };
+
+//             const response = await axios.post(`${base_url}/question/${id}/answers`, data, { headers });
+//             // console.log("response", response);
+//             return response;
+//         }
+//         else {
+//             alert("Please Login")
+//         }
+//     }
+//     catch (error) {
+//         console.error('Error fetching data', error);
+//     }
+// }
+
 
 
 // const tempGrid = (
