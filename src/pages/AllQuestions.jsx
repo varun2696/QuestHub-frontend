@@ -1,8 +1,8 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Unstable_Grid2';
-import { Divider, Toolbar, Typography } from '@mui/material';
-import { Button } from '@mui/joy';
+import { Divider, Toolbar } from '@mui/material';
+import { Button, LinearProgress, Skeleton } from '@mui/joy';
 import { Link as LinkRoute } from 'react-router-dom'
 
 import MenuListItem from '../components/MenuListItem';
@@ -10,10 +10,19 @@ import RightCardHome from '../components/RightCardHome';
 import AllQuestionCard from '../components/AllQuestionCard';
 import { useSelector } from 'react-redux';
 
+import Typography from '@mui/joy/Typography';
 
 
 export default function AllQuestions() {
-    const {data} = useSelector((state) => state.questionsReducer)
+    const { data, isLoading } = useSelector((state) => state.questionsReducer)
+
+    // explicitly writing this to implement loading
+    const [isLoad, setIsLoad] = React.useState(true);
+    React.useEffect(() => {
+        setTimeout(() => {
+            setIsLoad(isLoading)
+        }, 2000);
+    }, [])
 
     
     return (
@@ -46,8 +55,9 @@ export default function AllQuestions() {
                                 </Button>
                             </LinkRoute>
                         </Toolbar>
+                        {isLoad && <LinearProgress color="neutral" />}
                         <Typography textAlign={'left'} p={3}>
-                            {data && data?.length}  questions
+                            <Skeleton loading={isLoad}>{data && data?.length}  questions</Skeleton>
                         </Typography>
                         <Divider />
 
@@ -64,6 +74,7 @@ export default function AllQuestions() {
                                         id={el._id}
                                         userFirstLetter={el.username[0]}
                                         questionDescription={el.questionDescription}
+                                        loading={isLoad}
                                     />
                                 )
                             })}

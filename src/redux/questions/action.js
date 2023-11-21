@@ -8,7 +8,8 @@ export const getQuestions = (dispatch) => {
 
     dispatch({ type: GET_QNS_REQ })
 
-    return axios.get(`${base_url}/questions`)
+    setTimeout(() => {
+        return axios.get(`${base_url}/questions`)
         .then(res => {
             console.log({ res });
             dispatch({ type: GET_QNS_SUCCESS, payload: res.data })
@@ -17,6 +18,7 @@ export const getQuestions = (dispatch) => {
             console.log({ err });
             dispatch({ type: GET_QNS_FAILURE })
         })
+    }, 2000);
 }
 
 

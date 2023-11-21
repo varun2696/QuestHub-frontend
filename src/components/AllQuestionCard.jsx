@@ -1,9 +1,11 @@
-import { Card, Stack, Typography, Avatar, Divider } from '@mui/material'
+import { Card, Stack, Avatar, Divider } from '@mui/material'
 import Chip from '@mui/material/Chip';
-
+import Skeleton from '@mui/joy/Skeleton';
+import Typography from '@mui/joy/Typography';
 import { Link as LinkRoute } from 'react-router-dom'
 
-const AllQuestionCard = ({ username, votes, answers, language, questionTitle, id, userFirstLetter, questionDescription }) => {
+
+const AllQuestionCard = ({ loading, username, votes, answers, language, questionTitle, id, userFirstLetter, questionDescription }) => {
     return (
         <>
             <LinkRoute to={`/question/${id}`} className='txt-dec-none'>
@@ -14,13 +16,21 @@ const AllQuestionCard = ({ username, votes, answers, language, questionTitle, id
                             pt={1.5}
                         >
                             <Stack direction={'row'} spacing={0.5} >
-                                <Typography fontSize={13}>{votes}</Typography>
-                                <Typography fontSize={13}>votes</Typography>
+                                <Typography fontSize={13}>
+                                    <Skeleton loading={loading}>{votes}</Skeleton>
+                                </Typography>
+                                <Typography fontSize={13}>
+                                    <Skeleton loading={loading}>votes</Skeleton>
+                                </Typography>
                             </Stack>
 
                             <Stack direction={'row'} spacing={0.5}>
-                                <Typography fontSize={13}>{answers}</Typography>
-                                <Typography fontSize={13}>answers</Typography>
+                                <Typography fontSize={13}>
+                                    <Skeleton loading={loading}>{answers}</Skeleton>
+                                </Typography>
+                                <Typography fontSize={13}>
+                                    <Skeleton loading={loading}>answers</Skeleton>
+                                </Typography>
                             </Stack>
                         </Stack>
 
@@ -34,28 +44,32 @@ const AllQuestionCard = ({ username, votes, answers, language, questionTitle, id
                                 color: '#a73fb9',
                                 fontSize: { lg: "1.3rem", md: "1.2rem", sm: "1.2rem", xs: "0.8rem" }
                             }}>
-                                {questionTitle}
+                                <Skeleton loading={loading}>{questionTitle}</Skeleton>
                             </Typography>
 
                             <Typography sx={{
                                 display: "flex",
                                 textAlign: 'left',
-                                fontSize:'0.8rem'
+                                fontSize: '0.8rem'
                             }}
                             >
-                                {questionDescription}
+                                <Skeleton loading={loading}>{questionDescription}</Skeleton>
                             </Typography>
                             <Stack direction={'row'} justifyContent={'space-between'}>
                                 <Stack direction={'row'} spacing={1}>
-                                    <Chip label={language} size="small" />
+                                    <Chip label={
+                                        <Skeleton loading={loading} animation="wave" variant="rectangular" width={80} height={15} >
+                                            {language}
+                                        </Skeleton>
+                                    } size="small" />
                                 </Stack>
 
                                 <Stack direction={'row'} alignItems={"center"} spacing={1}>
                                     <Typography>
-                                        {username}
+                                        <Skeleton loading={loading}>{username}</Skeleton>
                                     </Typography>
                                     <Avatar sx={{ width: 28, height: 28 }}>
-                                        {userFirstLetter}
+                                        <Skeleton loading={loading}>{userFirstLetter}</Skeleton>
                                     </Avatar>
                                 </Stack>
                             </Stack>

@@ -12,7 +12,7 @@ import RightCardHome from '../components/RightCardHome';
 import { Button } from '@mui/joy';
 import { useDispatch, useSelector } from 'react-redux';
 import { getQuestions } from '../redux/questions/action';
-
+import LinearProgress from '@mui/joy/LinearProgress';
 
 
 
@@ -26,7 +26,7 @@ const Item = styled(Paper)(({ theme }) => ({
 
 
 export default function HomePage() {
-    const { data } = useSelector(state => state.questionsReducer)
+    const { data, isLoading } = useSelector(state => state.questionsReducer)
     const dispatch = useDispatch()
 
     React.useEffect(() => {
@@ -67,7 +67,7 @@ export default function HomePage() {
                             </Toolbar>
 
                             <Divider />
-
+                            {isLoading && <LinearProgress color="neutral" />}
                             <Box sx={{ m: 'auto' }}>
                                 {data && data?.map((el) => {
                                     return (
@@ -80,6 +80,7 @@ export default function HomePage() {
                                             language={el.language}
                                             id={el._id}
                                             userFirstLetter={el.username[0]}
+                                            loading={isLoading}
                                         />
                                     )
                                 })}
