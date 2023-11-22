@@ -1,18 +1,22 @@
 import { Box, Card, CardActions, CardContent, Divider, Stack, Typography } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
-import { Link as LinkRoute, useParams } from 'react-router-dom'
+import Backdrop from '@mui/material/Backdrop';
+import { Button } from '@mui/joy';
+import Alert from '@mui/joy/Alert';
+import AspectRatio from '@mui/joy/AspectRatio';
+import IconButton from '@mui/joy/IconButton';
+import LinearProgress from '@mui/joy/LinearProgress';
+import Check from '@mui/icons-material/Check';
+import Close from '@mui/icons-material/Close';
+import TextareaAutosize from '@mui/material/TextareaAutosize';
 
+import { useEffect, useState } from 'react';
+import { Link as LinkRoute, useParams } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux';
 import RightCardHome from '../components/RightCardHome';
 import MenuListItem from '../components/MenuListItem';
-import axios from 'axios';
-import { base_url } from '../api';
-import { useEffect, useState } from 'react';
-import TextareaAutosize from '@mui/material/TextareaAutosize';
 import AnswerCard from '../components/AnswerCard';
-import { Button } from '@mui/joy';
-import { useDispatch, useSelector } from 'react-redux';
 import { getQuestionbyId, postYourAnswer } from '../redux/questions/action';
-
 
 
 
@@ -20,10 +24,11 @@ const SinglePageQnA = () => {
 
     const { id } = useParams();
     const [textareaValue, setTextareaValue] = useState('');
-
+    const [postAnswerSuccess, setPostAnswerSuccess] = useState(false);
+    const [open, setOpen] = useState(false);
     const { questionById } = useSelector(state => state.questionsReducer)
-    // console.log(("quest", questionById));
     const dispatch = useDispatch()
+
 
     const handlePostAnswer = () => {
         // console.log("text", textareaValue)
@@ -35,7 +40,8 @@ const SinglePageQnA = () => {
         dispatch(postYourAnswer(id, postAnswer))
             .then(() => {
                 setTextareaValue("");
-                alert("Your ANS Posted")
+                setPostAnswerSuccess(true)
+                setOpen(true)
             })
 
     }
@@ -49,136 +55,215 @@ const SinglePageQnA = () => {
     }, [])
 
 
-    return (
-        <Box sx={{
-            flexGrow: 1,
-            maxWidth: { lg: "80vw", md: "94vw", sm: '96vw', xs: "98vw", },
-            m: 'auto',
-            // border: '2px solid red'
-        }}>
-            <Stack direction={'row'} spacing={1}>
-                <Box sx={{
-                    width: { md: '17vw', lg: '13vw' },
-                    // border: "1px solid",
-                    display: { xs: 'none', sm: 'none', md: 'block', lg: 'block' }
-                }}>
-                    <MenuListItem />
-                </Box>
+    const handleCloseAlert = () => {
+        setPostAnswerSuccess(false);
+        setOpen(false)
+    };
 
-                <Box sx={{
-                    width: { lg: "70vw", md: "90vw", sm: '95vw', xs: "95vw", },
-                    // border: "1px solid red",
-                    // height: "80vh"
-                }}>
-                    <Box width={'100%'}>
-                        <Stack
-                            direction={'row'}
-                            justifyContent={"space-between"}
-                            alignItems={'center'}
-                            p={2}
+
+    return (
+        <>
+            <Backdrop
+                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                open={open}
+                onClick={handleCloseAlert}
+            >
+                {postAnswerSuccess && (
+                    <Box
+                        position="fixed"
+                        top="10%"
+                        left="35%"
+                        transform="translateX(-50%)"
+                        width="30%"
+                        zIndex={10} // Set a high z-index to make sure it's on top
+                    >
+                        <Alert
+                            size="lg"
+                            color="success"
+                            variant="solid"
+                            invertedColors
+                            startDecorator={
+                                <AspectRatio
+                                    variant="solid"
+                                    ratio="1"
+                                    sx={{
+                                        minWidth: 40,
+                                        borderRadius: '50%',
+                                        boxShadow: '0 2px 12px 0 rgb(0 0 0/0.2)',
+                                    }}
+                                >
+                                    <div>
+                                        <Check fontSize="xl2" />
+                                    </div>
+                                </AspectRatio>
+                            }
+                            endDecorator={
+                                <IconButton
+                                    variant="plain"
+                                    sx={{
+                                        '--IconButton-size': '32px',
+                                        transform: 'translate(0.5rem, -0.5rem)',
+                                    }}
+                                    onClick={handleCloseAlert}
+                                >
+                                    <Close />
+                                </IconButton>
+                            }
+                            sx={{ alignItems: 'flex-start', overflow: 'hidden' }}
                         >
-                            <Typography
-                                variant="h5"
-                                fontWeight={400}
+                            <div>
+                                <Typography variant='h6'>Success</Typography>
+                                <Typography variant='body1'>
+                                    You have successfully posted your Answer.
+                                </Typography>
+                            </div>
+                            <LinearProgress
+                                variant="solid"
+                                color="success"
+                                value={40}
                                 sx={{
-                                    mr: 'auto',
-                                    pt: 1,
-                                    fontSize: { lg: '2rem', md: "2rem", sm: "1.5rem", xs: "1rem" },
-                                    width: "80%"
+                                    position: 'absolute',
+                                    bottom: 0,
+                                    left: 0,
+                                    right: 0,
+                                    borderRadius: 0,
+                                }}
+                            />
+                        </Alert>
+
+                    </Box>
+                )}
+            </Backdrop>
+            <Box sx={{
+                flexGrow: 1,
+                maxWidth: { lg: "80vw", md: "94vw", sm: '96vw', xs: "98vw", },
+                m: 'auto',
+                // border: '2px solid red'
+            }}>
+                <Stack direction={'row'} spacing={1}>
+                    <Box sx={{
+                        width: { md: '17vw', lg: '13vw' },
+                        // border: "1px solid",
+                        display: { xs: 'none', sm: 'none', md: 'block', lg: 'block' }
+                    }}>
+                        <MenuListItem />
+                    </Box>
+
+                    <Box sx={{
+                        width: { lg: "70vw", md: "90vw", sm: '95vw', xs: "95vw", },
+                        // border: "1px solid red",
+                        // height: "80vh"
+                    }}>
+                        <Box width={'100%'}>
+                            <Stack
+                                direction={'row'}
+                                justifyContent={"space-between"}
+                                alignItems={'center'}
+                                p={2}
+                            >
+                                <Typography
+                                    variant="h5"
+                                    fontWeight={400}
+                                    sx={{
+                                        mr: 'auto',
+                                        pt: 1,
+                                        fontSize: { lg: '2rem', md: "2rem", sm: "1.5rem", xs: "1rem" },
+                                        width: "80%"
+                                    }}
+                                >
+                                    {questionById && questionById?.questionTitle}
+                                </Typography>
+                                <LinkRoute to={'/ask-question'} sx={{ border: '2px solid' }}>
+                                    <Button variant="solid"  >
+                                        Ask Question
+                                    </Button>
+                                </LinkRoute>
+                            </Stack>
+                            <Stack direction={'row'} spacing={5} p={2}>
+                                <Typography>1</Typography>
+                                <Typography>2</Typography>
+                                <Typography>3</Typography>
+                                <Typography>4</Typography>
+                            </Stack>
+                        </Box>
+                        <Divider />
+
+                        <Grid container spacing={1} sx={{ mt: 2, }}>
+                            <Grid lg={8.4} md={8} sm={12} xs={12}>
+
+                                <Card sx={{ mt: 2 }} >
+                                    <CardContent>
+                                        <Typography variant='h6'>
+                                            Description of the question:
+                                        </Typography>
+                                        <br />
+                                        <Typography>
+                                            {questionById && questionById?.questionDescription}
+                                        </Typography>
+                                    </CardContent>
+                                </Card>
+                                <Typography
+                                    fontSize={'1.5rem'}
+                                    sx={{ pb: 1, pt: 2 }}>
+                                    {/* 2 Answers */}
+                                    {questionById && questionById?.answers?.length} Answers
+                                </Typography>
+
+                                {questionById && questionById?.answers?.map((el) => {
+                                    return (
+                                        <AnswerCard
+                                            key={el._id}
+                                            answerText={el.answerText}
+                                            username={el.username}
+                                        />
+                                    )
+                                })}
+
+                                <Box sx={{ mt: 8, mb: 2, }}>
+                                    <Card variant="outlined" >
+                                        <CardContent >
+                                            <Typography variant='h5' sx={{ fontWeight: 500, pb: 2 }} gutterBottom>
+                                                Your Answer
+                                            </Typography>
+                                            <Box>
+                                                <TextareaAutosize
+                                                    value={textareaValue}
+                                                    onChange={handleTextareaChange}
+                                                    aria-label="textarea"
+                                                    placeholder="Enter your text here"
+                                                    rows={10}
+                                                    style={{
+                                                        minWidth: '100%',
+                                                        maxWidth: "100%",
+                                                        minHeight: '200px',
+                                                    }}
+                                                />
+                                            </Box>
+                                        </CardContent>
+                                        <CardActions sx={{ ml: 1 }}>
+                                            <Button
+                                                variant="solid"
+                                                onClick={handlePostAnswer}
+                                                disabled={!textareaValue}
+                                            >
+                                                POST
+                                            </Button>
+                                        </CardActions>
+                                    </Card>
+                                </Box>
+                            </Grid>
+                            <Grid lg={3.6} md={4}
+                                sx={{
+                                    display: { xs: 'none', sm: 'none', md: "block", lg: "block" }
                                 }}
                             >
-                                {questionById && questionById?.questionTitle}
-                            </Typography>
-                            <LinkRoute to={'/ask-question'} sx={{ border: '2px solid' }}>
-                                <Button variant="solid"  >
-                                    Ask Question
-                                </Button>
-                            </LinkRoute>
-                        </Stack>
-                        <Stack direction={'row'} spacing={5} p={2}>
-                            <Typography>1</Typography>
-                            <Typography>2</Typography>
-                            <Typography>3</Typography>
-                            <Typography>4</Typography>
-                        </Stack>
+                                <RightCardHome />
+                            </Grid>
+                        </Grid>
                     </Box>
-                    <Divider />
-
-                    <Grid container spacing={1} sx={{ mt: 2, }}>
-                        <Grid lg={8.4} md={8} sm={12} xs={12}>
-
-                            <Card sx={{ mt: 2 }} >
-                                <CardContent>
-                                    <Typography variant='h6'>
-                                        Description of the question:
-                                    </Typography>
-                                    <br />
-                                    <Typography>
-                                        {questionById && questionById?.questionDescription}
-                                    </Typography>
-                                </CardContent>
-                            </Card>
-                            <Typography
-                                fontSize={'1.5rem'}
-                                sx={{ pb: 1, pt: 2 }}>
-                                {/* 2 Answers */}
-                                {questionById && questionById?.answers?.length} Answers
-                            </Typography>
-
-                            {questionById && questionById?.answers?.map((el) => {
-                                return (
-                                    <AnswerCard
-                                        key={el._id}
-                                        answerText={el.answerText}
-                                        username={el.username}
-                                    />
-                                )
-                            })}
-
-                            <Box sx={{ mt: 8, mb: 2, }}>
-                                <Card variant="outlined" >
-                                    <CardContent >
-                                        <Typography variant='h5' sx={{ fontWeight: 500, pb: 2 }} gutterBottom>
-                                            Your Answer
-                                        </Typography>
-                                        <Box>
-                                            <TextareaAutosize
-                                                value={textareaValue}
-                                                onChange={handleTextareaChange}
-                                                aria-label="textarea"
-                                                placeholder="Enter your text here"
-                                                rows={10}
-                                                style={{
-                                                    minWidth: '100%',
-                                                    maxWidth: "100%",
-                                                    minHeight: '200px',
-                                                }}
-                                            />
-                                        </Box>
-                                    </CardContent>
-                                    <CardActions sx={{ ml: 1 }}>
-                                        <Button
-                                            variant="solid"
-                                            onClick={handlePostAnswer}
-                                            disabled={!textareaValue}
-                                        >
-                                            POST
-                                        </Button>
-                                    </CardActions>
-                                </Card>
-                            </Box>
-                        </Grid>
-                        <Grid lg={3.6} md={4}
-                            sx={{
-                                display: { xs: 'none', sm: 'none', md: "block", lg: "block" }
-                            }}
-                        >
-                            <RightCardHome />
-                        </Grid>
-                    </Grid>
-                </Box>
-            </Stack>
-        </Box>
+                </Stack>
+            </Box>
+        </>
     )
 }
 

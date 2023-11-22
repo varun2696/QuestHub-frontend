@@ -14,6 +14,15 @@ import {
 }
     from '@mui/material'
 
+import Backdrop from '@mui/material/Backdrop';
+
+import Alert from '@mui/joy/Alert';
+import AspectRatio from '@mui/joy/AspectRatio';
+import IconButton from '@mui/joy/IconButton';
+import LinearProgress from '@mui/joy/LinearProgress';
+import Check from '@mui/icons-material/Check';
+import Close from '@mui/icons-material/Close';
+
 import { forwardRef, useRef, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { postNewQuestion } from '../redux/questions/action'
@@ -173,38 +182,16 @@ const problemSuggestionCard = (
 )
 
 
-// const postNewQuestion = async (data) => {
-//     try {
-//         const authToken = sessionStorage.getItem('authToken');
-
-//         if (authToken) {
-//             const headers = {
-//                 Authorization: `Bearer ${authToken}`,
-//             };
-
-//             const response = await axios.post(`${base_url}/question/create`, data, { headers });
-//             // console.log("response", response);
-//             return response;
-//         }
-//         else {
-//             alert("Please Login")
-//         }
-//     }
-//     catch (error) {
-//         console.error('Error fetching data', error);
-//     }
-// }
-
-
 const AskQuestion = () => {
     const [questionTitle, setQuestionTitle] = useState("");
     const [questionDescription, setQuestionDescription] = useState('');
     const [language, setLanguage] = useState("");
-
+    const [postQuestionSuccess, setPostQuestionSuccess] = useState(false)
+    const [open, setOpen] = useState(false);
     const input2Ref = useRef(null);
     const input3Ref = useRef(null);
-
     const dispatch = useDispatch()
+
 
     const handleNext1Click = () => {
         input2Ref.current.focus();
@@ -230,29 +217,96 @@ const AskQuestion = () => {
         }
         else {
 
-            dispatch(postNewQuestion(postAnswer)).then(()=>{
+            dispatch(postNewQuestion(postAnswer)).then(() => {
                 setQuestionTitle("");
                 setQuestionDescription("");
                 setLanguage("");
-                alert("Your Qusetion Posted")
+                setPostQuestionSuccess(true)
+                setOpen(true)
             })
-            
-            // postNewQuestion(postAnswer)
-            //     .then(res => {
-            //         console.log(res.data.msg)
-            //         setQuestionTitle("");
-            //         setQuestionDescription("");
-            //         setLanguage("");
-            //         alert(res.data.msg)
-            //     })
-            //     .catch(err => {
-            //         console.log({ err });
-            //     })
+
         }
     }
 
+    const handleCloseAlert = () => {
+        setPostQuestionSuccess(false);
+        setOpen(false);
+    };
+
+
     return (
         <>
+            <Backdrop
+                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                open={open}
+                onClick={handleCloseAlert}
+            >
+                {postQuestionSuccess && (
+                    <Box
+                        position="fixed"
+                        top="10%"
+                        left="35%"
+                        transform="translateX(-50%)"
+                        width="30%"
+                        zIndex={10} // Set a high z-index to make sure it's on top
+                    >
+                        <Alert
+                            size="lg"
+                            color="success"
+                            variant="solid"
+                            invertedColors
+                            startDecorator={
+                                <AspectRatio
+                                    variant="solid"
+                                    ratio="1"
+                                    sx={{
+                                        minWidth: 40,
+                                        borderRadius: '50%',
+                                        boxShadow: '0 2px 12px 0 rgb(0 0 0/0.2)',
+                                    }}
+                                >
+                                    <div>
+                                        <Check fontSize="xl2" />
+                                    </div>
+                                </AspectRatio>
+                            }
+                            endDecorator={
+                                <IconButton
+                                    variant="plain"
+                                    sx={{
+                                        '--IconButton-size': '32px',
+                                        transform: 'translate(0.5rem, -0.5rem)',
+                                    }}
+                                    onClick={handleCloseAlert}
+                                >
+                                    <Close />
+                                </IconButton>
+                            }
+                            sx={{ alignItems: 'flex-start', overflow: 'hidden' }}
+                        >
+                            <div>
+                                <Typography variant='h6'>Success</Typography>
+                                <Typography variant='body1'>
+                                    You have successfully posted your question.
+                                </Typography>
+                            </div>
+                            <LinearProgress
+                                variant="solid"
+                                color="success"
+                                value={40}
+                                sx={{
+                                    position: 'absolute',
+                                    bottom: 0,
+                                    left: 0,
+                                    right: 0,
+                                    borderRadius: 0,
+                                }}
+                            />
+                        </Alert>
+
+                    </Box>
+                )}
+            </Backdrop>
             <Box sx={{
                 width: { lg: "80vw", md: "95vw", sm: '98vw', xs: "100vw", },
                 minWidth: { lg: "80vw", md: "95vw", sm: '98vw', xs: "100vw", },
